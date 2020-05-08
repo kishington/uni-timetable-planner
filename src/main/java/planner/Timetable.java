@@ -14,6 +14,10 @@ public class Timetable {
 
     }
 
+    public void removeAllLessons() {
+
+    }
+
     public int getTotalWeeklyWorkload() {
         return 0;
     }
