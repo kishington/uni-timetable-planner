@@ -1,4 +1,4 @@
-package ua.com.foxminded.planner;
+package ua.com.foxminded.university.planner;
 
 import java.util.List;
 
@@ -9,6 +9,15 @@ public class Teacher {
     private List<Subject> subjects;
     private Timetable timetable;
 
+    public Teacher() {
+    }
+
+    public Teacher(int id, String firstName, String lastName) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+    
     public int getId() {
         return id;
     }
@@ -47,6 +56,11 @@ public class Teacher {
 
     public void setTimetable(Timetable timetable) {
         this.timetable = timetable;
+    }
+
+    @Override
+    public String toString() {
+        return "Teacher [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + "]";
     }
 
 }

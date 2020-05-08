@@ -1,4 +1,4 @@
-package ua.com.foxminded.planner;
+package ua.com.foxminded.university.planner;
 
 import java.time.DayOfWeek;
 
@@ -47,5 +47,11 @@ public class Lesson {
 
     public void setTimeslot(Timeslot timeslot) {
         this.timeslot = timeslot;
+    }
+
+    @Override
+    public String toString() {
+        return "Lesson [subject=" + subject + ", teacher=" + teacher + ", group=" + group + ", day=" + day
+                + ", timeslot=" + timeslot + "]";
     }
 }

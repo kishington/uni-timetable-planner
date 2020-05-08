@@ -1,4 +1,4 @@
-package ua.com.foxminded.planner;
+package ua.com.foxminded.university.planner;
 
 import java.time.DayOfWeek;
 import java.util.Map;
@@ -32,5 +32,10 @@ public class Timetable {
 
     public int getDailyWorkload(Subject subject, DayOfWeek day) {
         return 0;
+    }
+
+    @Override
+    public String toString() {
+        return "Timetable [value=" + value + "]";
     }
 }

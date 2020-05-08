@@ -1,4 +1,4 @@
-package ua.com.foxminded.planner;
+package ua.com.foxminded.university.planner;
 
 import java.time.LocalTime;
 
@@ -29,6 +29,11 @@ public class Timeslot {
 
     public void setEndTime(LocalTime endTime) {
         this.endTime = endTime;
+    }
+
+    @Override
+    public String toString() {
+        return "Timeslot [number=" + number + "]";
     }
 
 }

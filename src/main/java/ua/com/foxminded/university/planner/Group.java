@@ -1,14 +1,9 @@
-package ua.com.foxminded.planner;
+package ua.com.foxminded.university.planner;
 
 public class Group {
 
     private int number;
     private Timetable timetable;
-    
-    @Override
-    public String toString() { 
-        return String.valueOf(number); 
-    }
 
     public int getNumber() {
         return number;
@@ -25,4 +20,10 @@ public class Group {
     public void setTimetable(Timetable timetable) {
         this.timetable = timetable;
     }
+
+    @Override
+    public String toString() {
+        return "Group [number=" + number + "]";
+    }
+
 }
