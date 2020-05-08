@@ -1,9 +1,14 @@
-package planner;
+package ua.com.foxminded.planner;
 
 public class Group {
 
     private int number;
     private Timetable timetable;
+    
+    @Override
+    public String toString() { 
+        return String.valueOf(number); 
+    }
 
     public int getNumber() {
         return number;

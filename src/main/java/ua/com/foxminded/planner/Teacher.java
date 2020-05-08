@@ -1,4 +1,4 @@
-package planner;
+package ua.com.foxminded.planner;
 
 import java.util.List;
 
