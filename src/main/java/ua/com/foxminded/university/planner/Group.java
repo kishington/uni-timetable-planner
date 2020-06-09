@@ -2,15 +2,15 @@ package ua.com.foxminded.university.planner;
 
 public class Group {
 
-    private int number;
+    private int id;
     private Timetable timetable;
 
-    public int getNumber() {
-        return number;
+    public int getId() {
+        return id;
     }
 
-    public void setNumber(int number) {
-        this.number = number;
+    public void setId(int number) {
+        this.id = number;
     }
 
     public Timetable getTimetable() {
@@ -23,7 +23,7 @@ public class Group {
 
     @Override
     public String toString() {
-        return "Group [number=" + number + "]";
+        return "Group [number=" + id + "]";
     }
 
 }

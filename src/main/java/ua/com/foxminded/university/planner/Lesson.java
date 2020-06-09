@@ -3,11 +3,20 @@ package ua.com.foxminded.university.planner;
 import java.time.DayOfWeek;
 
 public class Lesson {
+    private int id;
     private Subject subject;
     private Teacher teacher;
     private Group group;
     private DayOfWeek day;
     private Timeslot timeslot;
+    
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public Subject getSubject() {
         return subject;

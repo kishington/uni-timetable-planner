@@ -1,7 +1,6 @@
 package ua.com.foxminded.university.spring.dao.impl;
 
 import java.util.List;
-import java.util.Optional;
 
 import javax.sql.DataSource;
 
@@ -10,12 +9,13 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import ua.com.foxminded.university.planner.Teacher;
+import ua.com.foxminded.university.spring.dao.TeacherDao;
 import ua.com.foxminded.university.spring.dao.mappers.TeacherMapper;
 
 @Component
-public class TeacherDaoImpl implements ua.com.foxminded.university.spring.dao.TeacherDao {
+public class TeacherDaoImpl implements TeacherDao {
     
-    JdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTemplate;
     
     private final String SQL_GET_TEACHER_BY_ID = "SELECT * FROM teachers WHERE teacher_id = ?";
     private final String SQL_GET_ALL = "SELECT * FROM teachers";
@@ -27,8 +27,6 @@ public class TeacherDaoImpl implements ua.com.foxminded.university.spring.dao.Te
     public TeacherDaoImpl(DataSource dataSource) {
         jdbcTemplate = new JdbcTemplate(dataSource);
     }
-    
-
 
     @Override
     public Teacher getById(int teacherId) {

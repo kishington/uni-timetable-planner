@@ -2,7 +2,16 @@ package ua.com.foxminded.university.planner;
 
 public class Subject {
 
+    private int id;
     private String name;
+    
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -14,7 +23,9 @@ public class Subject {
 
     @Override
     public String toString() {
-        return "Subject [name=" + name + "]";
+        return "Subject [id=" + id + ", name=" + name + "]";
     }
+
+
 
 }

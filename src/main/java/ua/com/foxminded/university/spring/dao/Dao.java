@@ -10,7 +10,7 @@ public interface Dao<T> {
      
     boolean delete(T t);
      
-    boolean update(T t); //void update(T t, String[] params);
+    boolean update(T t);
      
     boolean create(T t);
     
