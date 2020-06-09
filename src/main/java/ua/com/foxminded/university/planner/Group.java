@@ -9,8 +9,8 @@ public class Group {
         return id;
     }
 
-    public void setId(int number) {
-        this.id = number;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public Timetable getTimetable() {
