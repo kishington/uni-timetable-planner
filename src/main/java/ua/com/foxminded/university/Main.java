@@ -54,6 +54,11 @@ public class Main {
             System.out.println(p);
         }
 
+        String[] allBeanNames = context.getBeanDefinitionNames();
+        for(String beanName : allBeanNames) {
+            System.out.println(beanName);
+        }
+        
         context.close();
     }
 
