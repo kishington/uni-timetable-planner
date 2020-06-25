@@ -23,6 +23,10 @@ public class TeacherDaoImpl implements TeacherDao {
     private final String SQL_UPDATE_TEACHER = "UPDATE teachers SET first_name = ?, last_name = ? WHERE teacher_id = ?";
     private final String SQL_INSERT_TEACHER = "INSERT INTO teachers(teacher_id, first_name, last_name) values(?,?,?)";
 
+    public TeacherDaoImpl() {
+        
+    }
+    
     @Autowired
     public TeacherDaoImpl(DataSource dataSource) {
         jdbcTemplate = new JdbcTemplate(dataSource);

@@ -78,7 +78,6 @@ class LessonDaoImplTest {
         lesson.setId(lessonId);
         Mockito.when(jdbcTemplate.update("DELETE FROM lessons WHERE lesson_id = ?", lessonId)).thenReturn(1);
         assertTrue(lessonDao.delete(lesson));
-        Mockito.when(jdbcTemplate.update("DELETE FROM lessons WHERE lesson_id = ?", 2)).thenReturn(0);
     }
     
     @Test
@@ -89,6 +88,7 @@ class LessonDaoImplTest {
         Mockito.when(jdbcTemplate.update("DELETE FROM lessons WHERE lesson_id = ?", lessonId)).thenReturn(2);
         assertTrue(lessonDao.delete(lesson));
     }
+    
     @Test
     void testDelete_deletedZeroLessons() {
         Lesson lesson = new Lesson();
