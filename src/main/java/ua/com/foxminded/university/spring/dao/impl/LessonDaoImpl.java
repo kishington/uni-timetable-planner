@@ -26,6 +26,10 @@ public class LessonDaoImpl implements LessonDao {
                                              "WHERE lesson_id = ?";
     private final String SQL_INSERT_LESSON = "INSERT INTO lessons(lesson_id, subject_id, teacher_id, group_id, day, timeslot_id) values(?,?,?,?,?,?)";
     
+    public LessonDaoImpl() {
+        
+    }
+    
     @Autowired
     public LessonDaoImpl(DataSource dataSource) {
         jdbcTemplate = new JdbcTemplate(dataSource);

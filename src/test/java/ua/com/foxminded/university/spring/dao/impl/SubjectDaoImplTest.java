@@ -2,9 +2,27 @@ package ua.com.foxminded.university.spring.dao.impl;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import ua.com.foxminded.university.spring.dao.LessonDao;
+import ua.com.foxminded.university.spring.dao.SubjectDao;
 
 class SubjectDaoImplTest {
+    
+    @Mock
+    JdbcTemplate jdbcTemplate;
+    SubjectDao lessonDao = new SubjectDaoImpl();
+    
+    @BeforeEach
+    public void setup() {
+        MockitoAnnotations.initMocks(this);
+        ReflectionTestUtils.setField(lessonDao, "jdbcTemplate", jdbcTemplate);
+    }
 
     @Test
     void testSubjectDaoImpl() {

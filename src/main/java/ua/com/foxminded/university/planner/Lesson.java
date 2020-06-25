@@ -60,7 +60,7 @@ public class Lesson {
 
     @Override
     public String toString() {
-        return "Lesson [subject=" + subject + ", teacher=" + teacher + ", group=" + group + ", day=" + day
-                + ", timeslot=" + timeslot + "]";
+        return "Lesson [id=" + id + ", subject=" + subject + ", teacher=" + teacher + ", group=" + group + ", day="
+                + day + ", timeslot=" + timeslot + "]";
     }
 }

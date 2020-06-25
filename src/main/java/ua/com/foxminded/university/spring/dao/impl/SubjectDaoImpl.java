@@ -14,23 +14,27 @@ import ua.com.foxminded.university.spring.dao.mappers.SubjectMapper;
 
 @Component
 public class SubjectDaoImpl implements SubjectDao {
-    
+
     private JdbcTemplate jdbcTemplate;
-    
+
     private final String SQL_GET_SUBJECT_BY_ID = "SELECT * FROM subjects WHERE subject_id = ?";
     private final String SQL_GET_ALL = "SELECT * FROM subjects";
     private final String SQL_DELETE_SUBJECT = "DELETE FROM subjects WHERE subject_id = ?";
     private final String SQL_UPDATE_SUBJECT = "UPDATE subjects SET name = ? WHERE subject_id = ?";
     private final String SQL_INSERT_SUBJECT = "INSERT INTO subjects(subject_id, name) values(?,?)";
 
+    public SubjectDaoImpl() {
+
+    }
+
     @Autowired
     public SubjectDaoImpl(DataSource dataSource) {
         jdbcTemplate = new JdbcTemplate(dataSource);
     }
-    
+
     @Override
     public Subject getById(int subjectId) {
-        return jdbcTemplate.queryForObject(SQL_GET_SUBJECT_BY_ID, new Object[] {subjectId}, new SubjectMapper());
+        return jdbcTemplate.queryForObject(SQL_GET_SUBJECT_BY_ID, new Object[] { subjectId }, new SubjectMapper());
     }
 
     @Override
