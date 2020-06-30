@@ -13,7 +13,6 @@ import java.util.Locale;
 
 import static org.mockito.ArgumentMatchers.any;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -22,11 +21,8 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import ua.com.foxminded.university.planner.Group;
-import ua.com.foxminded.university.planner.Lesson;
-import ua.com.foxminded.university.planner.Subject;
-import ua.com.foxminded.university.planner.Teacher;
-import ua.com.foxminded.university.planner.Timeslot;
+import ua.com.foxminded.university.models.Lesson;
+import ua.com.foxminded.university.models.Timeslot;
 import ua.com.foxminded.university.spring.dao.LessonDao;
 import ua.com.foxminded.university.spring.dao.mappers.LessonMapper;
 
@@ -36,16 +32,15 @@ class LessonDaoImplTest {
     
     @Mock
     JdbcTemplate jdbcTemplate;
-    LessonDao lessonDao = new LessonDaoImpl();
+    LessonDao lessonDao = new LessonDaoImpl(jdbcTemplate);
     
-    @BeforeEach
-    public void setup() {
+    private LessonDaoImplTest() {
         MockitoAnnotations.initMocks(this);
         ReflectionTestUtils.setField(lessonDao, "jdbcTemplate", jdbcTemplate);
     }
     
     @Test
-    void testGetById() {     
+    void testGetById_ShouldReturnLesson_WhenRequestedByLessonIdAsParam() {   
         for(int lessonId = 0; lessonId < 5; lessonId++) {
             Lesson lesson = new Lesson();
             lesson.setId(lessonId);
@@ -60,7 +55,7 @@ class LessonDaoImplTest {
     }
 
     @Test
-    void testGetAll() {
+    void testGetAll_ShouldReturnListOfLessons_WhenRequestedWithNoParam() {
         List<Lesson> lessons = new ArrayList<>();
         for(int lessonId = 0; lessonId < 5; lessonId++) {
             Lesson lesson = new Lesson();
@@ -72,7 +67,7 @@ class LessonDaoImplTest {
     }
 
     @Test
-    void testDelete_deletedOneLesson() {
+    void testDelete_ShouldDeleteOneLesson_WhenRequestedByLessonIdAsParam() {
         Lesson lesson = new Lesson();
         int lessonId = 0;
         lesson.setId(lessonId);
@@ -81,7 +76,7 @@ class LessonDaoImplTest {
     }
     
     @Test
-    void testDelete_deletedTwoLessons() {
+    void testDelete_ShouldDeleteTwoLessons_WhenRequestedByLessonIdAsParam() {
         Lesson lesson = new Lesson();
         int lessonId = 1;
         lesson.setId(lessonId);
@@ -90,7 +85,7 @@ class LessonDaoImplTest {
     }
     
     @Test
-    void testDelete_deletedZeroLessons() {
+    void testDelete_ShouldDeleteZeroLessons_WhenRequestedByLessonIdAsParam() {
         Lesson lesson = new Lesson();
         int lessonId = 3;
         lesson.setId(lessonId);
@@ -99,16 +94,16 @@ class LessonDaoImplTest {
     }
 
     @Test
-    void testUpdate_updateSuccess() {
+    void testUpdate_ShouldReturnTrue_WhenRequestedByLessonAsParam() {
         Lesson lesson = new Lesson();
         initialise(lesson);
         
         int lessonId = lesson.getId();
-        int subjectId = lesson.getSubject().getId();
-        int teacherId = lesson.getTeacher().getId();
-        int groupId = lesson.getGroup().getId();
+        int subjectId = lesson.getSubjectId();
+        int teacherId = lesson.getTeacherId();
+        int groupId = lesson.getGroupId();
         String day = lesson.getDay().getDisplayName(TextStyle.FULL, Locale.UK);
-        int timeslotId = lesson.getTimeslot().getId();
+        int timeslotId = lesson.getTimeslotId();
         
         String sqlUpdLesson = "UPDATE lessons SET subject_id = ?, teacher_id = ?, group_id = ?, day = ?, timeslot_id = ? WHERE lesson_id = ?";
         Mockito.when(jdbcTemplate.update(sqlUpdLesson, subjectId, teacherId, groupId, day, timeslotId, lessonId)).thenReturn(1);
@@ -116,16 +111,16 @@ class LessonDaoImplTest {
     }
     
     @Test
-    void testUpdate_updateFail() {
+    void testUpdate_ShouldReturnFalse_WhenRequestedByLessonAsParam() {
         Lesson lesson = new Lesson();
         initialise(lesson);
         
         int lessonId = lesson.getId();
-        int subjectId = lesson.getSubject().getId();
-        int teacherId = lesson.getTeacher().getId();
-        int groupId = lesson.getGroup().getId();
+        int subjectId = lesson.getSubjectId();
+        int teacherId = lesson.getGroupId();
+        int groupId = lesson.getGroupId();
         String day = lesson.getDay().getDisplayName(TextStyle.FULL, Locale.UK);
-        int timeslotId = lesson.getTimeslot().getId();
+        int timeslotId = lesson.getTimeslotId();
         
         String sqlUpdLesson = "UPDATE lessons SET subject_id = ?, teacher_id = ?, group_id = ?, day = ?, timeslot_id = ? WHERE lesson_id = ?";
         Mockito.when(jdbcTemplate.update(sqlUpdLesson, subjectId, teacherId, groupId, day, timeslotId, lessonId)).thenReturn(0);
@@ -133,16 +128,16 @@ class LessonDaoImplTest {
     }  
 
     @Test
-    void testCreate_createSuccess() {
+    void testCreate_ShouldReturnTrue_WhenRequestedByLessonAsParam() {
         Lesson lesson = new Lesson();
         initialise(lesson);
         
         int lessonId = lesson.getId();
-        int subjectId = lesson.getSubject().getId();
-        int teacherId = lesson.getTeacher().getId();
-        int groupId = lesson.getGroup().getId();
+        int subjectId = lesson.getSubjectId();
+        int teacherId = lesson.getTeacherId();
+        int groupId = lesson.getGroupId();
         String day = lesson.getDay().getDisplayName(TextStyle.FULL, Locale.UK); 
-        int timeslotId = lesson.getTimeslot().getId();
+        int timeslotId = lesson.getTimeslotId();
         
         String sqlInsertLesson = "INSERT INTO lessons(lesson_id, subject_id, teacher_id, group_id, day, timeslot_id) values(?,?,?,?,?,?)";
         Mockito.when(jdbcTemplate.update(sqlInsertLesson, lessonId, subjectId, teacherId, groupId, day, timeslotId)).thenReturn(1); 
@@ -150,16 +145,16 @@ class LessonDaoImplTest {
     }
     
     @Test
-    void testCreate_createFail() {
+    void testCreate_ShouldReturnFalse_WhenRequestedByLessonAsParam() {
         Lesson lesson = new Lesson();
         initialise(lesson);
         
         int lessonId = lesson.getId();
-        int subjectId = lesson.getSubject().getId();
-        int teacherId = lesson.getTeacher().getId();
-        int groupId = lesson.getGroup().getId();
+        int subjectId = lesson.getSubjectId();
+        int teacherId = lesson.getTeacherId();
+        int groupId = lesson.getGroupId();
         String day = lesson.getDay().getDisplayName(TextStyle.FULL, Locale.UK); 
-        int timeslotId = lesson.getTimeslot().getId();
+        int timeslotId = lesson.getTimeslotId();
         
         String sqlInsertLesson = "INSERT INTO lessons(lesson_id, subject_id, teacher_id, group_id, day, timeslot_id) values(?,?,?,?,?,?)";
         Mockito.when(jdbcTemplate.update(sqlInsertLesson, lessonId, subjectId, teacherId, groupId, day, timeslotId)).thenReturn(0); 
@@ -168,23 +163,12 @@ class LessonDaoImplTest {
 
     void initialise(Lesson lesson) {
         lesson.setId(0); 
-        
-        Subject subject = new Subject();
-        subject.setId(0);  
-        lesson.setSubject(subject);
-        
-        Teacher teacher = new Teacher();
-        teacher.setId(0);  
-        lesson.setTeacher(teacher);
-        
-        Group group = new Group();
-        group.setId(0);    
-        lesson.setGroup(group);
-        
+        lesson.setSubjectId(0); 
+        lesson.setTeacherId(0);
+        lesson.setGroupId(0);
         DayOfWeek day = DayOfWeek.MONDAY;
-        lesson.setDay(day);  
-        
-        Timeslot timeslot = Timeslot.FIRST;
-        lesson.setTimeslot(timeslot); 
+        lesson.setDay(day);         
+        int timeslotId = Timeslot.FIRST.getId();
+        lesson.setTimeslotId(timeslotId);
     }
 }

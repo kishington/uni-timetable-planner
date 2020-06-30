@@ -2,34 +2,28 @@ package ua.com.foxminded.university.spring.dao.impl;
 
 import java.util.List;
 
-import javax.sql.DataSource;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
-import ua.com.foxminded.university.planner.Teacher;
+import ua.com.foxminded.university.models.Teacher;
 import ua.com.foxminded.university.spring.dao.TeacherDao;
 import ua.com.foxminded.university.spring.dao.mappers.TeacherMapper;
 
 @Component
 public class TeacherDaoImpl implements TeacherDao {
     
+    private static final String SQL_GET_TEACHER_BY_ID = "SELECT * FROM teachers WHERE teacher_id = ?";
+    private static final String SQL_GET_ALL = "SELECT * FROM teachers";
+    private static final String SQL_DELETE_TEACHER = "DELETE FROM teachers WHERE teacher_id = ?";
+    private static final String SQL_UPDATE_TEACHER = "UPDATE teachers SET first_name = ?, last_name = ? WHERE teacher_id = ?";
+    private static final String SQL_INSERT_TEACHER = "INSERT INTO teachers(teacher_id, first_name, last_name) values(?,?,?)";
+    
     private JdbcTemplate jdbcTemplate;
-    
-    private final String SQL_GET_TEACHER_BY_ID = "SELECT * FROM teachers WHERE teacher_id = ?";
-    private final String SQL_GET_ALL = "SELECT * FROM teachers";
-    private final String SQL_DELETE_TEACHER = "DELETE FROM teachers WHERE teacher_id = ?";
-    private final String SQL_UPDATE_TEACHER = "UPDATE teachers SET first_name = ?, last_name = ? WHERE teacher_id = ?";
-    private final String SQL_INSERT_TEACHER = "INSERT INTO teachers(teacher_id, first_name, last_name) values(?,?,?)";
-
-    public TeacherDaoImpl() {
-        
-    }
-    
+   
     @Autowired
-    public TeacherDaoImpl(DataSource dataSource) {
-        jdbcTemplate = new JdbcTemplate(dataSource);
+    public TeacherDaoImpl(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override

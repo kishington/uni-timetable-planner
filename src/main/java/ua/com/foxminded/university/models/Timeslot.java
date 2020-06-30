@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.planner;
+package ua.com.foxminded.university.models;
 
 import java.time.LocalTime;
 

@@ -2,34 +2,28 @@ package ua.com.foxminded.university.spring.dao.impl;
 
 import java.util.List;
 
-import javax.sql.DataSource;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
-import ua.com.foxminded.university.planner.Subject;
+import ua.com.foxminded.university.models.Subject;
 import ua.com.foxminded.university.spring.dao.SubjectDao;
 import ua.com.foxminded.university.spring.dao.mappers.SubjectMapper;
 
 @Component
 public class SubjectDaoImpl implements SubjectDao {
 
+    private static final String SQL_GET_SUBJECT_BY_ID = "SELECT * FROM subjects WHERE subject_id = ?";
+    private static final String SQL_GET_ALL = "SELECT * FROM subjects";
+    private static final String SQL_DELETE_SUBJECT = "DELETE FROM subjects WHERE subject_id = ?";
+    private static final String SQL_UPDATE_SUBJECT = "UPDATE subjects SET name = ? WHERE subject_id = ?";
+    private static final String SQL_INSERT_SUBJECT = "INSERT INTO subjects(subject_id, name) values(?,?)";
+
     private JdbcTemplate jdbcTemplate;
-
-    private final String SQL_GET_SUBJECT_BY_ID = "SELECT * FROM subjects WHERE subject_id = ?";
-    private final String SQL_GET_ALL = "SELECT * FROM subjects";
-    private final String SQL_DELETE_SUBJECT = "DELETE FROM subjects WHERE subject_id = ?";
-    private final String SQL_UPDATE_SUBJECT = "UPDATE subjects SET name = ? WHERE subject_id = ?";
-    private final String SQL_INSERT_SUBJECT = "INSERT INTO subjects(subject_id, name) values(?,?)";
-
-    public SubjectDaoImpl() {
-
-    }
-
+    
     @Autowired
-    public SubjectDaoImpl(DataSource dataSource) {
-        jdbcTemplate = new JdbcTemplate(dataSource);
+    public SubjectDaoImpl(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override

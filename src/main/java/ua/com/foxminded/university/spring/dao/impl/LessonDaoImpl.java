@@ -4,35 +4,29 @@ import java.time.format.TextStyle;
 import java.util.List;
 import java.util.Locale;
 
-import javax.sql.DataSource;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
-import ua.com.foxminded.university.planner.Lesson;
+import ua.com.foxminded.university.models.Lesson;
 import ua.com.foxminded.university.spring.dao.LessonDao;
 import ua.com.foxminded.university.spring.dao.mappers.LessonMapper;
 
 @Component
 public class LessonDaoImpl implements LessonDao {
-
+    
+    private static final String SQL_GET_LESSON_BY_ID = "SELECT * FROM lessons WHERE lesson_id = ?";
+    private static final String SQL_GET_ALL = "SELECT * FROM lessons";
+    private static final String SQL_DELETE_LESSON = "DELETE FROM lessons WHERE lesson_id = ?";
+    private static final String SQL_UPDATE_LESSON = "UPDATE lessons SET subject_id = ?, teacher_id = ?, group_id = ?, day = ?, timeslot_id = ? " +
+                                             "WHERE lesson_id = ?";
+    private static final String SQL_INSERT_LESSON = "INSERT INTO lessons(lesson_id, subject_id, teacher_id, group_id, day, timeslot_id) values(?,?,?,?,?,?)";
+    
     private JdbcTemplate jdbcTemplate;
     
-    private final String SQL_GET_LESSON_BY_ID = "SELECT * FROM lessons WHERE lesson_id = ?";
-    private final String SQL_GET_ALL = "SELECT * FROM lessons";
-    private final String SQL_DELETE_LESSON = "DELETE FROM lessons WHERE lesson_id = ?";
-    private final String SQL_UPDATE_LESSON = "UPDATE lessons SET subject_id = ?, teacher_id = ?, group_id = ?, day = ?, timeslot_id = ? " +
-                                             "WHERE lesson_id = ?";
-    private final String SQL_INSERT_LESSON = "INSERT INTO lessons(lesson_id, subject_id, teacher_id, group_id, day, timeslot_id) values(?,?,?,?,?,?)";
-    
-    public LessonDaoImpl() {
-        
-    }
-    
     @Autowired
-    public LessonDaoImpl(DataSource dataSource) {
-        jdbcTemplate = new JdbcTemplate(dataSource);
+    public LessonDaoImpl(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
     
     @Override
@@ -53,10 +47,10 @@ public class LessonDaoImpl implements LessonDao {
     @Override
     public boolean update(Lesson lesson) {
         int lessonId = lesson.getId();
-        int subjectId = lesson.getSubject().getId();
-        int teacherId = lesson.getTeacher().getId();
-        int groupId = lesson.getGroup().getId();
-        int timeslotId = lesson.getTimeslot().getId();
+        int subjectId = lesson.getSubjectId();
+        int teacherId = lesson.getTeacherId();
+        int groupId = lesson.getGroupId();
+        int timeslotId = lesson.getTimeslotId();
         String day = lesson.getDay().getDisplayName(TextStyle.FULL, Locale.UK);     
         return jdbcTemplate.update(SQL_UPDATE_LESSON, subjectId, teacherId, groupId, day, timeslotId, lessonId) > 0;
     }
@@ -64,10 +58,10 @@ public class LessonDaoImpl implements LessonDao {
     @Override
     public boolean create(Lesson lesson) {
         int lessonId = lesson.getId();
-        int subjectId = lesson.getSubject().getId();
-        int teacherId = lesson.getTeacher().getId();
-        int groupId = lesson.getGroup().getId();
-        int timeslotId = lesson.getTimeslot().getId();
+        int subjectId = lesson.getSubjectId();
+        int teacherId = lesson.getTeacherId();
+        int groupId = lesson.getGroupId();
+        int timeslotId = lesson.getTimeslotId();
         String day = lesson.getDay().getDisplayName(TextStyle.FULL, Locale.UK); 
         return jdbcTemplate.update(SQL_INSERT_LESSON, lessonId, subjectId, teacherId, groupId, day, timeslotId) > 0;
     }

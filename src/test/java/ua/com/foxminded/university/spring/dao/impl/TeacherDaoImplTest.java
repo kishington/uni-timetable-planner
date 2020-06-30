@@ -9,7 +9,6 @@ import static org.mockito.ArgumentMatchers.eq;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -17,23 +16,22 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import ua.com.foxminded.university.planner.Teacher;
+import ua.com.foxminded.university.models.Teacher;
 import ua.com.foxminded.university.spring.dao.mappers.TeacherMapper;
 
 class TeacherDaoImplTest {
     
     @Mock
     JdbcTemplate jdbcTemplate;
-    TeacherDaoImpl teacherDao = new TeacherDaoImpl();
+    TeacherDaoImpl teacherDao = new TeacherDaoImpl(jdbcTemplate);
     
-    @BeforeEach
-    public void setup() {
+    private TeacherDaoImplTest() {
         MockitoAnnotations.initMocks(this);
         ReflectionTestUtils.setField(teacherDao, "jdbcTemplate", jdbcTemplate);
     }
 
     @Test
-    void testGetById() {     
+    void testGetById_ShouldReturnteacher_WhenRequestedByTeacherIdAsParam() {  
         for(int teacherId = 0; teacherId < 5; teacherId++) {
             Teacher teacher = new Teacher();
             teacher.setId(teacherId);
@@ -48,7 +46,7 @@ class TeacherDaoImplTest {
     }
     
     @Test
-    void testGetAll() {
+    void testGetAll_ShouldReturnListOfTeachers_WhenRequestedWithNoParam() {
         List<Teacher> teachers = new ArrayList<>();
         for(int teacherId = 0; teacherId < 5; teacherId++) {
             Teacher teacher = new Teacher();
@@ -60,7 +58,7 @@ class TeacherDaoImplTest {
     }
     
     @Test
-    void testDelete_deletedOneTeacher() {
+    void testDelete_ShouldDeleteOneTeacher_WhenRequestedByTeacherIdAsParam() {
         Teacher teacher = new Teacher();
         int teacherId = 0;
         teacher.setId(teacherId);
@@ -69,7 +67,7 @@ class TeacherDaoImplTest {
     }
     
     @Test
-    void testDelete_deletedZeroTeachers() {
+    void testDelete_ShouldDeleteZeroTeachers_WhenRequestedByTeacherIdAsParam() {
         Teacher teacher = new Teacher();
         int teacherId = 0;
         teacher.setId(teacherId);
@@ -78,7 +76,7 @@ class TeacherDaoImplTest {
     }
 
     @Test
-    void testUpdate_updateSuccess() {
+    void testUpdate_ShouldReturnTrue_WhenRequestedByTeacherAsParam() {
         int teacherId = 0;
         String firstName = "Victor";
         String lastName = "Ivanov";
@@ -94,7 +92,7 @@ class TeacherDaoImplTest {
     }
     
     @Test
-    void testUpdate_updateFail() {
+    void testUpdate_ShouldReturnFalse_WhenRequestedByTeacherAsParam() {
         int teacherId = 0;
         String firstName = "Victor";
         String lastName = "Ivanov";
@@ -110,7 +108,7 @@ class TeacherDaoImplTest {
     }
 
     @Test
-    void testCreate_createSuccess() {
+    void testCreate_ShouldReturnTrue_WhenRequestedByTeacherAsParam() {
         int teacherId = 0;
         String firstName = "Victor";
         String lastName = "Ivanov";
@@ -126,7 +124,7 @@ class TeacherDaoImplTest {
     }
     
     @Test
-    void testCreate_createFail() {
+    void testCreate_ShouldReturnFalse_WhenRequestedByTeacherAsParam() {
         int teacherId = 0;
         String firstName = "Victor";
         String lastName = "Ivanov";

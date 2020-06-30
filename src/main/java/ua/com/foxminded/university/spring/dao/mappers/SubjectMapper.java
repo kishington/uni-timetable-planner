@@ -5,7 +5,7 @@ import java.sql.SQLException;
 
 import org.springframework.jdbc.core.RowMapper;
 
-import ua.com.foxminded.university.planner.Subject;
+import ua.com.foxminded.university.models.Subject;
 
 public class SubjectMapper implements RowMapper<Subject> {
 

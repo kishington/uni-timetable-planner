@@ -9,7 +9,6 @@ import static org.mockito.ArgumentMatchers.eq;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -17,7 +16,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import ua.com.foxminded.university.planner.Subject;
+import ua.com.foxminded.university.models.Subject;
 import ua.com.foxminded.university.spring.dao.SubjectDao;
 import ua.com.foxminded.university.spring.dao.mappers.SubjectMapper;
 
@@ -25,16 +24,15 @@ class SubjectDaoImplTest {
     
     @Mock
     JdbcTemplate jdbcTemplate;
-    SubjectDao subjectDao = new SubjectDaoImpl();
+    SubjectDao subjectDao = new SubjectDaoImpl(jdbcTemplate);
     
-    @BeforeEach
-    public void setup() {
+    private SubjectDaoImplTest() {
         MockitoAnnotations.initMocks(this);
         ReflectionTestUtils.setField(subjectDao, "jdbcTemplate", jdbcTemplate);
     }
 
     @Test
-    void testGetById() {     
+    void testGetById_ShouldReturnSubject_WhenRequestedBySubjectIdAsParam() {    
         for(int subjectId = 0; subjectId < 5; subjectId++) {
             Subject subject = new Subject();
             subject.setId(subjectId);
@@ -49,7 +47,7 @@ class SubjectDaoImplTest {
     }
     
     @Test
-    void testGetAll() {
+    void testGetAll_ShouldReturnListOfSubjects_WhenRequestedWithNoParam() {
         List<Subject> subjects = new ArrayList<>();
         for(int subjectId = 0; subjectId < 5; subjectId++) {
             Subject subject = new Subject();
@@ -61,7 +59,7 @@ class SubjectDaoImplTest {
     }
     
     @Test
-    void testDelete_deletedOneSubject() {
+    void testDelete_ShouldDeleteOneSubject_WhenRequestedBySubjectIdAsParam() {
         Subject subject = new Subject();
         int subjectId = 0;
         subject.setId(subjectId);
@@ -70,7 +68,7 @@ class SubjectDaoImplTest {
     }
     
     @Test
-    void testDelete_deletedZeroSubjects() {
+    void testDelete_ShouldDeleteZeroSubjects_WhenRequestedBySubjectIdAsParam() {
         Subject subject = new Subject();
         int subjectId = 3;
         subject.setId(subjectId);
@@ -79,7 +77,7 @@ class SubjectDaoImplTest {
     }
     
     @Test
-    void testUpdate_updateSuccess() {
+    void testUpdate_ShouldReturnTrue_WhenRequestedBySubjectAsParam() {
         int subjectId = 0;
         String subjectName = "Maths";
         
@@ -93,7 +91,7 @@ class SubjectDaoImplTest {
     }
     
     @Test
-    void testUpdate_updateFail() {
+    void testUpdate_ShouldReturnFalse_WhenRequestedBySubjectAsParam() {
         int subjectId = 0;
         String subjectName = "Maths";
         
@@ -107,7 +105,7 @@ class SubjectDaoImplTest {
     }
     
     @Test
-    void testCreate_createSuccess() {
+    void testCreate_ShouldReturnTrue_WhenRequestedBySubjectAsParam() {
         int subjectId = 0;
         String subjectName = "Maths";
         
@@ -121,7 +119,7 @@ class SubjectDaoImplTest {
     }
     
     @Test
-    void testCreate_createFail() {
+    void testCreate_ShouldReturnFalse_WhenRequestedBySubjectAsParam() {
         int subjectId = 0;
         String subjectName = "Maths";
         
