@@ -8,6 +8,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 @Configuration
@@ -31,5 +32,10 @@ public class AppConfig {
         driverManagerDataSource.setPassword(environment.getProperty(PASSWORD));
         driverManagerDataSource.setDriverClassName(environment.getProperty(DRIVER));
         return driverManagerDataSource;
+    }
+    
+    @Bean
+    JdbcTemplate jdbcTemplate(DataSource dataSource) {
+    return new JdbcTemplate(dataSource);
     }
 }
