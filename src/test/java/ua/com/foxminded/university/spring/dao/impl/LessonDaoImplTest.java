@@ -19,11 +19,8 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import ua.com.foxminded.university.models.Lesson;
-import ua.com.foxminded.university.models.Timeslot;
-import ua.com.foxminded.university.spring.dao.LessonDao;
 import ua.com.foxminded.university.spring.dao.mappers.LessonMapper;
 
 class LessonDaoImplTest {
@@ -63,14 +60,41 @@ class LessonDaoImplTest {
             ")\n" + 
             "values\n" + 
             "  (?, ?, ?, ?, ?, ?)\n"; 
+    private static final String SQL_GET_NO_OF_LESSONS_PER_WEEK_FOR_TEACHER = "" + 
+            "select\n" + 
+            "  count(*)\n" + 
+            "from\n" + 
+            "  lessons\n" + 
+            "where\n" + 
+            "  teacher_id = ?\n";
+    private static final String SQL_GET_NO_OF_LESSONS_PER_WEEK_FOR_GROUP = "" + 
+            "select\n" + 
+            "  count(*)\n" + 
+            "from\n" + 
+            "  lessons\n" + 
+            "where\n" + 
+            "  group_id = ?\n";
+    private static final String SQL_GET_LESSONS_FOR_GROUP_FOR_GIVEN_DAY = "" +
+            "select\n" + 
+            "  lesson_id,\n" +
+            "  subject_id,\n" + 
+            "  teacher_id,\n" + 
+            "  group_id,\n" + 
+            "  day,\n" + 
+            "  timeslot_id\n" + 
+            "from\n" + 
+            "  lessons\n" + 
+            "where\n" + 
+            "  group_id = ?\n" + 
+            "  and upper(day) = ?\n";
     
     @Mock
     JdbcTemplate jdbcTemplate;
-    LessonDao lessonDao = new LessonDaoImpl(jdbcTemplate);
+    LessonDaoImpl lessonDao;
     
     private LessonDaoImplTest() {
         MockitoAnnotations.initMocks(this);
-        ReflectionTestUtils.setField(lessonDao, "jdbcTemplate", jdbcTemplate);
+        lessonDao = new LessonDaoImpl(jdbcTemplate);
     }
     
     @Test
@@ -129,7 +153,7 @@ class LessonDaoImplTest {
     @Test
     void testUpdate_ShouldReturnTrue_WhenRequestedByLessonAsParam() {
         Lesson lesson = new Lesson();
-        initialise(lesson);
+        initialise(lesson, 0, 0, 0, 0, DayOfWeek.MONDAY, 1);
         
         int lessonId = lesson.getId();
         int subjectId = lesson.getSubjectId();
@@ -145,7 +169,7 @@ class LessonDaoImplTest {
     @Test
     void testUpdate_ShouldReturnFalse_WhenRequestedByLessonAsParam() {
         Lesson lesson = new Lesson();
-        initialise(lesson);
+        initialise(lesson, 0, 0, 0, 0, DayOfWeek.MONDAY, 1);
         
         int lessonId = lesson.getId();
         int subjectId = lesson.getSubjectId();
@@ -162,7 +186,7 @@ class LessonDaoImplTest {
     @Test
     void testCreate_ShouldReturnTrue_WhenRequestedByLessonAsParam() {
         Lesson lesson = new Lesson();
-        initialise(lesson);
+        initialise(lesson, 0, 0, 0, 0, DayOfWeek.MONDAY, 1);
         
         int lessonId = lesson.getId();
         int subjectId = lesson.getSubjectId();
@@ -185,7 +209,7 @@ class LessonDaoImplTest {
     @Test
     void testCreate_ShouldReturnFalse_WhenRequestedByLessonAsParam() {
         Lesson lesson = new Lesson();
-        initialise(lesson);
+        initialise(lesson, 0, 0, 0, 0, DayOfWeek.MONDAY, 1);
         
         int lessonId = lesson.getId();
         int subjectId = lesson.getSubjectId();
@@ -197,15 +221,78 @@ class LessonDaoImplTest {
         Mockito.when(jdbcTemplate.update(SQL_INSERT_LESSON, lessonId, subjectId, teacherId, groupId, day, timeslotId)).thenReturn(0); 
         assertFalse(lessonDao.create(lesson));
     }
+    
+    @Test
+    void testGetNumberOfLessonsPerWeekForTeacher_ShouldReturnZero_WhenTeacherIdDosntExist() {
+        int teacherId = 0;
+        Mockito.when(jdbcTemplate.queryForObject(SQL_GET_NO_OF_LESSONS_PER_WEEK_FOR_TEACHER, new Object[] { teacherId }, Integer.class)).thenReturn(0);
+        int expectedNumberOfLessons = 0;
+        int actualNumberOfLessons = lessonDao.getNumberOfLessonsPerWeekForTeacher(teacherId);
+        assertEquals(expectedNumberOfLessons, actualNumberOfLessons);
+    }
+    
+    @Test
+    void testGetNumberOfLessonsPerWeekForTeacher_ShouldReturnPositiveInt_WhenTeacherIdAndLessonsExist() {
+        int teacherId = 0;
+        Mockito.when(jdbcTemplate.queryForObject(SQL_GET_NO_OF_LESSONS_PER_WEEK_FOR_TEACHER, new Object[] { teacherId }, Integer.class)).thenReturn(4);
+        int expectedNumberOfLessons = 4;
+        int actualNumberOfLessons = lessonDao.getNumberOfLessonsPerWeekForTeacher(teacherId);
+        assertEquals(expectedNumberOfLessons, actualNumberOfLessons);
+    }
+    
+    @Test
+    void testGetNumberOfLessonsPerWeekForGroup_ShouldReturnZero_WhenGroupIdDoesntExist() {
+        int groupId = 0;
+        Mockito.when(jdbcTemplate.queryForObject(SQL_GET_NO_OF_LESSONS_PER_WEEK_FOR_GROUP, new Object[] { groupId }, Integer.class)).thenReturn(0);
+        int expectedNumberOfLessons = 0;
+        int actualNumberOfLessons = lessonDao.getNumberOfLessonsPerWeekForGroup(groupId);
+        assertEquals(expectedNumberOfLessons, actualNumberOfLessons);
+    }
+    
+    @Test
+    void testGetNumberOfLessonsPerWeekForGroup_ShouldPositiveInt_WhenGroupIdAndLessonsExist() {
+        int groupId = 0;
+        Mockito.when(jdbcTemplate.queryForObject(SQL_GET_NO_OF_LESSONS_PER_WEEK_FOR_GROUP, new Object[] { groupId }, Integer.class)).thenReturn(10);
+        int expectedNumberOfLessons = 10;
+        int actualNumberOfLessons = lessonDao.getNumberOfLessonsPerWeekForGroup(groupId);
+        assertEquals(expectedNumberOfLessons, actualNumberOfLessons);
+    }
+    
+    @Test
+    void testGetAllLessonsForWeek_ShouldReturnListOfLessons_WhenRequestedByGroupIdAndDay() {
+        int groupId = 1;
+        String dayString = "THURSDAY";
+        DayOfWeek day = DayOfWeek.valueOf(dayString);
+        
+        List<Lesson> lessons = new ArrayList<>();
+        int subjectId = 0;
+        int teacherId = 0;
+        int timeslotId = 1;
+        for(int lessonId = 0; lessonId < 5; lessonId++) {
+            Lesson lesson = new Lesson();
+            initialise(lesson, lessonId, subjectId, teacherId, groupId, day, timeslotId);  
+            lessons.add(lesson);
+            subjectId++;
+            teacherId++;
+            timeslotId++;
+        }
+        
+        Mockito.when(jdbcTemplate.query(eq(SQL_GET_LESSONS_FOR_GROUP_FOR_GIVEN_DAY), eq(new Object[] { groupId, dayString }), any(LessonMapper.class))).thenReturn(lessons);
+        
+        List<Lesson> actualLessons = lessonDao.getAllLessonsForDay(groupId, dayString);
+        for (int lessonId = 0; lessonId < lessons.size(); lessonId++) {
+            Lesson expectedLesson = lessons.get(lessonId);
+            Lesson actualLesson = actualLessons.get(lessonId);
+            assertEquals(expectedLesson, actualLesson);
+        }
+    }
 
-    void initialise(Lesson lesson) {
-        lesson.setId(0); 
-        lesson.setSubjectId(0); 
-        lesson.setTeacherId(0);
-        lesson.setGroupId(0);
-        DayOfWeek day = DayOfWeek.MONDAY;
+    void initialise(Lesson lesson, int lessonId, int subjectId, int teacherId, int groupId, DayOfWeek day, int timeslotId) {
+        lesson.setId(lessonId); 
+        lesson.setSubjectId(subjectId); 
+        lesson.setTeacherId(teacherId);
+        lesson.setGroupId(groupId);
         lesson.setDay(day);         
-        int timeslotId = Timeslot.FIRST.getId();
         lesson.setTimeslotId(timeslotId);
     }
 }

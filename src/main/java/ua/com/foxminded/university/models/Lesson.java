@@ -64,4 +64,41 @@ public class Lesson {
                 + ", day=" + day + ", timeslotId=" + timeslotId + "]";
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((day == null) ? 0 : day.hashCode());
+        result = prime * result + groupId;
+        result = prime * result + id;
+        result = prime * result + subjectId;
+        result = prime * result + teacherId;
+        result = prime * result + timeslotId;
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Lesson other = (Lesson) obj;
+        if (day != other.day)
+            return false;
+        if (groupId != other.groupId)
+            return false;
+        if (id != other.id)
+            return false;
+        if (subjectId != other.subjectId)
+            return false;
+        if (teacherId != other.teacherId)
+            return false;
+        if (timeslotId != other.timeslotId)
+            return false;
+        return true;
+    }
+
 }

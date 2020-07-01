@@ -14,7 +14,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import ua.com.foxminded.university.models.Teacher;
 import ua.com.foxminded.university.spring.dao.mappers.TeacherMapper;
@@ -55,11 +54,11 @@ class TeacherDaoImplTest {
     
     @Mock
     JdbcTemplate jdbcTemplate;
-    TeacherDaoImpl teacherDao = new TeacherDaoImpl(jdbcTemplate);
+    TeacherDaoImpl teacherDao;
     
     private TeacherDaoImplTest() {
         MockitoAnnotations.initMocks(this);
-        ReflectionTestUtils.setField(teacherDao, "jdbcTemplate", jdbcTemplate);
+        teacherDao = new TeacherDaoImpl(jdbcTemplate);
     }
 
     @Test

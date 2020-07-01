@@ -50,6 +50,33 @@ public class LessonDaoImpl implements LessonDao {
             ")\n" + 
             "values\n" + 
             "  (?, ?, ?, ?, ?, ?)\n"; 
+    private static final String SQL_GET_NO_OF_LESSONS_PER_WEEK_FOR_TEACHER = "" + 
+            "select\n" + 
+            "  count(*)\n" + 
+            "from\n" + 
+            "  lessons\n" + 
+            "where\n" + 
+            "  teacher_id = ?\n";
+    private static final String SQL_GET_NO_OF_LESSONS_PER_WEEK_FOR_GROUP = "" + 
+            "select\n" + 
+            "  count(*)\n" + 
+            "from\n" + 
+            "  lessons\n" + 
+            "where\n" + 
+            "  group_id = ?\n";
+    private static final String SQL_GET_LESSONS_FOR_GROUP_FOR_GIVEN_DAY = "" +
+            "select\n" + 
+            "  lesson_id,\n" +
+            "  subject_id,\n" + 
+            "  teacher_id,\n" + 
+            "  group_id,\n" + 
+            "  day,\n" + 
+            "  timeslot_id\n" + 
+            "from\n" + 
+            "  lessons\n" + 
+            "where\n" + 
+            "  group_id = ?\n" + 
+            "  and upper(day) = ?\n";
     
     private JdbcTemplate jdbcTemplate;
     
@@ -60,7 +87,7 @@ public class LessonDaoImpl implements LessonDao {
     
     @Override
     public Lesson getById(int lessonId) {
-        return jdbcTemplate.queryForObject(SQL_GET_LESSON_BY_ID, new Object[] {lessonId}, new LessonMapper());
+        return jdbcTemplate.queryForObject(SQL_GET_LESSON_BY_ID, new Object[] { lessonId }, new LessonMapper());
     }
 
     @Override
@@ -94,5 +121,17 @@ public class LessonDaoImpl implements LessonDao {
         String day = lesson.getDay().getDisplayName(TextStyle.FULL, Locale.UK); 
         return jdbcTemplate.update(SQL_INSERT_LESSON, lessonId, subjectId, teacherId, groupId, day, timeslotId) > 0;
     }
+    
+    public int getNumberOfLessonsPerWeekForTeacher(int teacherId) {      
+        return jdbcTemplate.queryForObject(SQL_GET_NO_OF_LESSONS_PER_WEEK_FOR_TEACHER, new Object[] { teacherId }, Integer.class);
+    }
 
+    public int getNumberOfLessonsPerWeekForGroup(int groupId) {      
+        return jdbcTemplate.queryForObject(SQL_GET_NO_OF_LESSONS_PER_WEEK_FOR_GROUP, new Object[] { groupId }, Integer.class);
+    }
+
+    public List<Lesson> getAllLessonsForDay(int groupId, String day) {
+        day = day.toUpperCase();
+        return jdbcTemplate.query(SQL_GET_LESSONS_FOR_GROUP_FOR_GIVEN_DAY, new Object[] { groupId, day }, new LessonMapper());
+    } 
 }

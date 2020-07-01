@@ -14,7 +14,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import ua.com.foxminded.university.models.Subject;
 import ua.com.foxminded.university.spring.dao.SubjectDao;
@@ -53,11 +52,11 @@ class SubjectDaoImplTest {
     
     @Mock
     JdbcTemplate jdbcTemplate;
-    SubjectDao subjectDao = new SubjectDaoImpl(jdbcTemplate);
+    SubjectDao subjectDao;
     
     private SubjectDaoImplTest() {
         MockitoAnnotations.initMocks(this);
-        ReflectionTestUtils.setField(subjectDao, "jdbcTemplate", jdbcTemplate);
+        subjectDao = new SubjectDaoImpl(jdbcTemplate);
     }
 
     @Test

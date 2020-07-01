@@ -25,8 +25,10 @@ public class LessonMapper implements RowMapper<Lesson> {
         lesson.setGroupId(groupId);
         
         String day = resultSet.getString("day");
-        day = day.toUpperCase();
-        lesson.setDay(DayOfWeek.valueOf(day));
+        if (day != null) {
+            day = day.toUpperCase();
+            lesson.setDay(DayOfWeek.valueOf(day));
+        }
         
         int timeslotId = resultSet.getInt("timeslot_id");
         lesson.setTimeslotId(timeslotId);
