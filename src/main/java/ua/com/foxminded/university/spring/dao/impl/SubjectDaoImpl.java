@@ -13,11 +13,34 @@ import ua.com.foxminded.university.spring.dao.mappers.SubjectMapper;
 @Component
 public class SubjectDaoImpl implements SubjectDao {
 
-    private static final String SQL_GET_SUBJECT_BY_ID = "SELECT * FROM subjects WHERE subject_id = ?";
-    private static final String SQL_GET_ALL = "SELECT * FROM subjects";
-    private static final String SQL_DELETE_SUBJECT = "DELETE FROM subjects WHERE subject_id = ?";
-    private static final String SQL_UPDATE_SUBJECT = "UPDATE subjects SET name = ? WHERE subject_id = ?";
-    private static final String SQL_INSERT_SUBJECT = "INSERT INTO subjects(subject_id, name) values(?,?)";
+    private static final String SQL_GET_SUBJECT_BY_ID = "" + 
+            "select\n" + 
+            "  *\n" + 
+            "from\n" + 
+            "  subjects\n" + 
+            "where\n" + 
+            "  subject_id = ?\n";
+    private static final String SQL_GET_ALL = "" + 
+            "select\n" + 
+            "  *\n" + 
+            "from\n" + 
+            "  subjects\n";
+    private static final String SQL_DELETE_SUBJECT = "" +
+            "delete from\n" + 
+            "  subjects\n" + 
+            "where\n" + 
+            "  subject_id = ?\n";
+    private static final String SQL_UPDATE_SUBJECT = "" +
+            "update\n" + 
+            "  subjects\n" + 
+            "set\n" + 
+            "  name = ?\n" + 
+            "where\n" + 
+            "  subject_id = ?\n"; 
+    private static final String SQL_INSERT_SUBJECT = "" +
+            "insert into subjects(subject_id, name)\n" + 
+            "values\n" + 
+            "  (?, ?)\n"; 
 
     private JdbcTemplate jdbcTemplate;
     

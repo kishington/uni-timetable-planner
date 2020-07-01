@@ -13,11 +13,37 @@ import ua.com.foxminded.university.spring.dao.mappers.TeacherMapper;
 @Component
 public class TeacherDaoImpl implements TeacherDao {
     
-    private static final String SQL_GET_TEACHER_BY_ID = "SELECT * FROM teachers WHERE teacher_id = ?";
-    private static final String SQL_GET_ALL = "SELECT * FROM teachers";
-    private static final String SQL_DELETE_TEACHER = "DELETE FROM teachers WHERE teacher_id = ?";
-    private static final String SQL_UPDATE_TEACHER = "UPDATE teachers SET first_name = ?, last_name = ? WHERE teacher_id = ?";
-    private static final String SQL_INSERT_TEACHER = "INSERT INTO teachers(teacher_id, first_name, last_name) values(?,?,?)";
+    private static final String SQL_GET_TEACHER_BY_ID = "" + 
+            "select\n" + 
+            "  *\n" + 
+            "from\n" + 
+            "  teachers\n" + 
+            "where\n" + 
+            "  teacher_id = ?\n";
+    private static final String SQL_GET_ALL = "" + 
+            "select\n" + 
+            "  *\n" + 
+            "from\n" + 
+            "  teachers\n";
+    private static final String SQL_DELETE_TEACHER = "" +
+            "delete from\n" + 
+            "  teachers\n" + 
+            "where\n" + 
+            "  teacher_id = ?\n";
+    private static final String SQL_UPDATE_TEACHER = "" +
+            "update\n" + 
+            "  teachers\n" + 
+            "set\n" + 
+            "  first_name = ?,\n" + 
+            "  last_name = ?\n" + 
+            "where\n" + 
+            "  teacher_id = ?\n"; 
+    private static final String SQL_INSERT_TEACHER = "" +
+            "insert into teachers(" + 
+            "  teacher_id, first_name, last_name\n" + 
+            ")\n" + 
+            "values\n" + 
+            "  (?, ?, ?)\n"; 
     
     private JdbcTemplate jdbcTemplate;
    

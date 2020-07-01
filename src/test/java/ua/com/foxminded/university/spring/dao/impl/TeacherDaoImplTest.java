@@ -21,6 +21,38 @@ import ua.com.foxminded.university.spring.dao.mappers.TeacherMapper;
 
 class TeacherDaoImplTest {
     
+    private static final String SQL_GET_TEACHER_BY_ID = "" + 
+            "select\n" + 
+            "  *\n" + 
+            "from\n" + 
+            "  teachers\n" + 
+            "where\n" + 
+            "  teacher_id = ?\n";
+    private static final String SQL_GET_ALL = "" + 
+            "select\n" + 
+            "  *\n" + 
+            "from\n" + 
+            "  teachers\n";
+    private static final String SQL_DELETE_TEACHER = "" +
+            "delete from\n" + 
+            "  teachers\n" + 
+            "where\n" + 
+            "  teacher_id = ?\n";
+    private static final String SQL_UPDATE_TEACHER = "" +
+            "update\n" + 
+            "  teachers\n" + 
+            "set\n" + 
+            "  first_name = ?,\n" + 
+            "  last_name = ?\n" + 
+            "where\n" + 
+            "  teacher_id = ?\n"; 
+    private static final String SQL_INSERT_TEACHER = "" +
+            "insert into teachers(" + 
+            "  teacher_id, first_name, last_name\n" + 
+            ")\n" + 
+            "values\n" + 
+            "  (?, ?, ?)\n";
+    
     @Mock
     JdbcTemplate jdbcTemplate;
     TeacherDaoImpl teacherDao = new TeacherDaoImpl(jdbcTemplate);
@@ -35,8 +67,7 @@ class TeacherDaoImplTest {
         for(int teacherId = 0; teacherId < 5; teacherId++) {
             Teacher teacher = new Teacher();
             teacher.setId(teacherId);
-            String sqlSelectById = "SELECT * FROM teachers WHERE teacher_id = ?";
-            Mockito.when(jdbcTemplate.queryForObject(eq(sqlSelectById), eq(new Object[] {teacherId}), any(TeacherMapper.class))).thenReturn(teacher); 
+            Mockito.when(jdbcTemplate.queryForObject(eq(SQL_GET_TEACHER_BY_ID), eq(new Object[] {teacherId}), any(TeacherMapper.class))).thenReturn(teacher); 
         }
         for(int expectedId = 0; expectedId < 5; expectedId++) {
             Teacher actualTeacher = teacherDao.getById(expectedId);
@@ -53,7 +84,7 @@ class TeacherDaoImplTest {
             teacher.setId(teacherId);
             teachers.add(teacher);
         }
-        Mockito.when(jdbcTemplate.query(eq("SELECT * FROM teachers"), any(TeacherMapper.class))).thenReturn(teachers);
+        Mockito.when(jdbcTemplate.query(eq(SQL_GET_ALL), any(TeacherMapper.class))).thenReturn(teachers);
         assertEquals(teachers, teacherDao.getAll());
     }
     
@@ -62,7 +93,7 @@ class TeacherDaoImplTest {
         Teacher teacher = new Teacher();
         int teacherId = 0;
         teacher.setId(teacherId);
-        Mockito.when(jdbcTemplate.update("DELETE FROM teachers WHERE teacher_id = ?", teacherId)).thenReturn(1);
+        Mockito.when(jdbcTemplate.update(SQL_DELETE_TEACHER, teacherId)).thenReturn(1);
         assertTrue(teacherDao.delete(teacher));
     }
     
@@ -71,7 +102,7 @@ class TeacherDaoImplTest {
         Teacher teacher = new Teacher();
         int teacherId = 0;
         teacher.setId(teacherId);
-        Mockito.when(jdbcTemplate.update("DELETE FROM teachers WHERE teacher_id = ?", teacherId)).thenReturn(0);
+        Mockito.when(jdbcTemplate.update(SQL_DELETE_TEACHER, teacherId)).thenReturn(0);
         assertFalse(teacherDao.delete(teacher));
     }
 
@@ -86,8 +117,7 @@ class TeacherDaoImplTest {
         teacher.setFirstName(firstName);
         teacher.setLastName(lastName);
         
-        String sqlUpdTeacher = "UPDATE teachers SET first_name = ?, last_name = ? WHERE teacher_id = ?";
-        Mockito.when(jdbcTemplate.update(sqlUpdTeacher, firstName, lastName, teacherId)).thenReturn(1);
+        Mockito.when(jdbcTemplate.update(SQL_UPDATE_TEACHER, firstName, lastName, teacherId)).thenReturn(1);
         assertTrue(teacherDao.update(teacher));
     }
     
@@ -102,8 +132,7 @@ class TeacherDaoImplTest {
         teacher.setFirstName(firstName);
         teacher.setLastName(lastName);
         
-        String sqlUpdTeacher = "UPDATE teachers SET first_name = ?, last_name = ? WHERE teacher_id = ?";
-        Mockito.when(jdbcTemplate.update(sqlUpdTeacher, firstName, lastName, teacherId)).thenReturn(0);
+        Mockito.when(jdbcTemplate.update(SQL_UPDATE_TEACHER, firstName, lastName, teacherId)).thenReturn(0);
         assertFalse(teacherDao.update(teacher));
     }
 
@@ -118,8 +147,7 @@ class TeacherDaoImplTest {
         teacher.setFirstName(firstName);
         teacher.setLastName(lastName);
         
-        String sqlInsertSubject = "INSERT INTO teachers(teacher_id, first_name, last_name) values(?,?,?)";
-        Mockito.when(jdbcTemplate.update(sqlInsertSubject, teacherId, firstName, lastName)).thenReturn(1); 
+        Mockito.when(jdbcTemplate.update(SQL_INSERT_TEACHER, teacherId, firstName, lastName)).thenReturn(1); 
         assertTrue(teacherDao.create(teacher));
     }
     
@@ -134,8 +162,7 @@ class TeacherDaoImplTest {
         teacher.setFirstName(firstName);
         teacher.setLastName(lastName);
         
-        String sqlInsertSubject = "INSERT INTO teachers(teacher_id, first_name, last_name) values(?,?,?)";
-        Mockito.when(jdbcTemplate.update(sqlInsertSubject, teacherId, firstName, lastName)).thenReturn(1); 
+        Mockito.when(jdbcTemplate.update(SQL_INSERT_TEACHER, teacherId, firstName, lastName)).thenReturn(1); 
         assertTrue(teacherDao.create(teacher));
     }
 }

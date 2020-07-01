@@ -15,12 +15,41 @@ import ua.com.foxminded.university.spring.dao.mappers.LessonMapper;
 @Component
 public class LessonDaoImpl implements LessonDao {
     
-    private static final String SQL_GET_LESSON_BY_ID = "SELECT * FROM lessons WHERE lesson_id = ?";
-    private static final String SQL_GET_ALL = "SELECT * FROM lessons";
-    private static final String SQL_DELETE_LESSON = "DELETE FROM lessons WHERE lesson_id = ?";
-    private static final String SQL_UPDATE_LESSON = "UPDATE lessons SET subject_id = ?, teacher_id = ?, group_id = ?, day = ?, timeslot_id = ? " +
-                                             "WHERE lesson_id = ?";
-    private static final String SQL_INSERT_LESSON = "INSERT INTO lessons(lesson_id, subject_id, teacher_id, group_id, day, timeslot_id) values(?,?,?,?,?,?)";
+    private static final String SQL_GET_LESSON_BY_ID = "" + 
+            "select\n" + 
+            "  *\n" + 
+            "from\n" + 
+            "  teachers\n" + 
+            "where\n" + 
+            "  teacher_id = ?\n";
+    private static final String SQL_GET_ALL = "" + 
+            "select\n" + 
+            "  *\n" + 
+            "from\n" + 
+            "  lessons\n";
+    private static final String SQL_DELETE_LESSON = "" +
+            "delete from\n" + 
+            "  lessons\n" + 
+            "where\n" + 
+            "  lesson_id = ?\n";
+    private static final String SQL_UPDATE_LESSON = "" +
+            "update\n" + 
+            "  lessons\n" + 
+            "set\n" + 
+            "  subject_id = ?,\n" + 
+            "  teacher_id = ?,\n" + 
+            "  group_id = ?,\n" + 
+            "  day = ?,\n" + 
+            "  timeslot_id = ?\n" + 
+            "where\n" + 
+            "  lesson_id = ?\n"; 
+    private static final String SQL_INSERT_LESSON = "" +
+            "insert into lessons(\n" + 
+            "  lesson_id, subject_id, teacher_id,\n" + 
+            "  group_id, day, timeslot_id\n" + 
+            ")\n" + 
+            "values\n" + 
+            "  (?, ?, ?, ?, ?, ?)\n"; 
     
     private JdbcTemplate jdbcTemplate;
     
