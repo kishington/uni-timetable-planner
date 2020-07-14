@@ -10,6 +10,18 @@ public class Lesson {
     private DayOfWeek day;
     private int timeslotId;
     
+    public Lesson() {
+    }
+    
+    public Lesson(int id, int subjectId, int teacherId, int groupId, DayOfWeek day, int timeslotId) {
+        this.id = id;
+        this.subjectId = subjectId;
+        this.teacherId = teacherId;
+        this.groupId = groupId;
+        this.day = day;
+        this.timeslotId = timeslotId;
+    }
+    
     public int getId() {
         return id;
     }

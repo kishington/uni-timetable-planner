@@ -6,6 +6,14 @@ import java.util.Map;
 public class Timetable {
     private Map<DayOfWeek, Map<Timeslot, Lesson>> value;
 
+    public Map<DayOfWeek, Map<Timeslot, Lesson>> getValue() {
+        return value;
+    }
+
+    public void setValue(Map<DayOfWeek, Map<Timeslot, Lesson>> value) {
+        this.value = value;
+    }
+
     public void addLesson(DayOfWeek day, Timeslot timeslot, Lesson lesson) {
 
     }

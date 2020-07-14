@@ -29,9 +29,9 @@ class LessonDaoImplTest {
             "select\n" + 
             "  *\n" + 
             "from\n" + 
-            "  teachers\n" + 
+            "  lessons\n" + 
             "where\n" + 
-            "  teacher_id = ?\n";
+            "  lesson_id = ?\n";
     private static final String SQL_GET_ALL = "" + 
             "select\n" + 
             "  *\n" + 

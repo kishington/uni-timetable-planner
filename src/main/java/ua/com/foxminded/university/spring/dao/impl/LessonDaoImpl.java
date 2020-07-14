@@ -1,5 +1,6 @@
 package ua.com.foxminded.university.spring.dao.impl;
 
+import java.time.DayOfWeek;
 import java.time.format.TextStyle;
 import java.util.List;
 import java.util.Locale;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import ua.com.foxminded.university.models.Lesson;
 import ua.com.foxminded.university.spring.dao.LessonDao;
+import ua.com.foxminded.university.spring.dao.mappers.LessonIdTimeslotIdMapper;
 import ua.com.foxminded.university.spring.dao.mappers.LessonMapper;
 
 @Component
@@ -19,9 +21,9 @@ public class LessonDaoImpl implements LessonDao {
             "select\n" + 
             "  *\n" + 
             "from\n" + 
-            "  teachers\n" + 
+            "  lessons\n" + 
             "where\n" + 
-            "  teacher_id = ?\n";
+            "  lesson_id = ?\n";
     private static final String SQL_GET_ALL = "" + 
             "select\n" + 
             "  *\n" + 
@@ -72,6 +74,36 @@ public class LessonDaoImpl implements LessonDao {
             "  group_id,\n" + 
             "  day,\n" + 
             "  timeslot_id\n" + 
+            "from\n" + 
+            "  lessons\n" + 
+            "where\n" + 
+            "  group_id = ?\n" + 
+            "  and upper(day) = ?\n";
+    private static final String SQL_GET_LESSONS_FOR_TEACHER_FOR_WEEK = "" + 
+            "select\n" + 
+            "  lesson_id,\n" + 
+            "  subject_id,\n" + 
+            "  teacher_id,\n" + 
+            "  group_id,\n" + 
+            "  day,\n" + 
+            "  timeslot_id\n" + 
+            "from\n" + 
+            "  lessons\n" + 
+            "where\n" + 
+            "  teacher_id = ?\n";
+    private static final String SQL_GET_TEACHER_DAY_TIMETABLE = "" +
+            "select\n" + 
+            "  timeslot_id,\n" + 
+            "  lesson_id\n" + 
+            "from\n" + 
+            "  lessons\n" + 
+            "where\n" + 
+            "  teacher_id = ?\n" + 
+            "  and upper(day) = ?\n";
+    private static final String SQL_GET_GROUP_DAY_TIMETABLE = "" +
+            "select\n" + 
+            "  timeslot_id,\n" + 
+            "  lesson_id\n" + 
             "from\n" + 
             "  lessons\n" + 
             "where\n" + 
@@ -134,4 +166,20 @@ public class LessonDaoImpl implements LessonDao {
         day = day.toUpperCase();
         return jdbcTemplate.query(SQL_GET_LESSONS_FOR_GROUP_FOR_GIVEN_DAY, new Object[] { groupId, day }, new LessonMapper());
     } 
+    
+    public List<Lesson> getAllTeacherLessonsForWeek(int teacherId) {
+        return jdbcTemplate.query(SQL_GET_LESSONS_FOR_TEACHER_FOR_WEEK, new Object[] { teacherId }, new LessonMapper());
+    }
+    
+    public List<int[]> getTimeslotIdAndLessonIdPairsForTeacherForDay(int teacherId, DayOfWeek day) {
+        String dayString = day.getDisplayName(TextStyle.FULL, Locale.UK);
+        dayString = dayString.toUpperCase();
+        return jdbcTemplate.query(SQL_GET_TEACHER_DAY_TIMETABLE, new Object[] { teacherId, dayString }, new LessonIdTimeslotIdMapper());
+    }
+    
+    public List<int[]> getTimeslotIdAndLessonIdPairsForGroupForDay(int groupId, DayOfWeek day) {
+        String dayString = day.getDisplayName(TextStyle.FULL, Locale.UK);
+        dayString = dayString.toUpperCase();
+        return jdbcTemplate.query(SQL_GET_GROUP_DAY_TIMETABLE, new Object[] { groupId, dayString }, new LessonIdTimeslotIdMapper());
+    }
 }
