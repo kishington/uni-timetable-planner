@@ -4,8 +4,10 @@ import java.time.LocalTime;
 
 public enum Timeslot {
 
-    FIRST(1, LocalTime.of(9, 0), LocalTime.of(10, 35)), SECOND(2, LocalTime.of(10, 50), LocalTime.of(12, 25)),
-    THIRD(3, LocalTime.of(13, 30), LocalTime.of(15, 05)), FOURTH(4, LocalTime.of(15, 20), LocalTime.of(16, 55)),
+    FIRST(1, LocalTime.of(9, 0), LocalTime.of(10, 35)), 
+    SECOND(2, LocalTime.of(10, 50), LocalTime.of(12, 25)),
+    THIRD(3, LocalTime.of(13, 30), LocalTime.of(15, 05)), 
+    FOURTH(4, LocalTime.of(15, 20), LocalTime.of(16, 55)),
     FIFTH(5, LocalTime.of(17, 5), LocalTime.of(18, 40));
 
     private int id;
@@ -33,27 +35,14 @@ public enum Timeslot {
     }
 
     public static Timeslot getTimeslotById(int id) {
-        Timeslot timeslot;
-        switch (id) {
-        case 1:
-            timeslot = Timeslot.FIRST;
-            break;
-        case 2:
-            timeslot = Timeslot.SECOND;
-            break;
-        case 3:
-            timeslot = Timeslot.THIRD;
-            break;
-        case 4:
-            timeslot = Timeslot.FOURTH;
-            break;
-        case 5:
-            timeslot = Timeslot.FIFTH;
-            break;
-        default:
-            throw new IllegalArgumentException(INVALID_ID_MESSAGE);
+        Timeslot[] timeslots = Timeslot.values();
+        for (Timeslot timeslot : timeslots) {
+            int timeslotId = timeslot.getId();
+            if (timeslotId == id) {
+                return timeslot;
+            }
         }
-        return timeslot;
+        throw new IllegalArgumentException(INVALID_ID_MESSAGE);
     }
 
     @Override
