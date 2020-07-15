@@ -11,7 +11,8 @@ import org.springframework.stereotype.Component;
 
 import ua.com.foxminded.university.models.Lesson;
 import ua.com.foxminded.university.spring.dao.LessonDao;
-import ua.com.foxminded.university.spring.dao.mappers.LessonIdTimeslotIdMapper;
+import ua.com.foxminded.university.spring.dao.mappers.TimeslotIdLessonIdMapper;
+import ua.com.foxminded.university.spring.dao.util.TimeslotIdLessonIdPair;
 import ua.com.foxminded.university.spring.dao.mappers.LessonMapper;
 
 @Component
@@ -171,15 +172,15 @@ public class LessonDaoImpl implements LessonDao {
         return jdbcTemplate.query(SQL_GET_LESSONS_FOR_TEACHER_FOR_WEEK, new Object[] { teacherId }, new LessonMapper());
     }
     
-    public List<int[]> getTimeslotIdAndLessonIdPairsForTeacherForDay(int teacherId, DayOfWeek day) {
+    public List<TimeslotIdLessonIdPair> getTeachersTimeslotIdAndLessonIdPairs(int teacherId, DayOfWeek day) {
         String dayString = day.getDisplayName(TextStyle.FULL, Locale.UK);
         dayString = dayString.toUpperCase();
-        return jdbcTemplate.query(SQL_GET_TEACHER_DAY_TIMETABLE, new Object[] { teacherId, dayString }, new LessonIdTimeslotIdMapper());
+        return jdbcTemplate.query(SQL_GET_TEACHER_DAY_TIMETABLE, new Object[] { teacherId, dayString }, new TimeslotIdLessonIdMapper());
     }
     
-    public List<int[]> getTimeslotIdAndLessonIdPairsForGroupForDay(int groupId, DayOfWeek day) {
+    public List<TimeslotIdLessonIdPair> getGroupsTimeslotIdAndLessonIdPairs(int groupId, DayOfWeek day) {
         String dayString = day.getDisplayName(TextStyle.FULL, Locale.UK);
         dayString = dayString.toUpperCase();
-        return jdbcTemplate.query(SQL_GET_GROUP_DAY_TIMETABLE, new Object[] { groupId, dayString }, new LessonIdTimeslotIdMapper());
+        return jdbcTemplate.query(SQL_GET_GROUP_DAY_TIMETABLE, new Object[] { groupId, dayString }, new TimeslotIdLessonIdMapper());
     }
 }

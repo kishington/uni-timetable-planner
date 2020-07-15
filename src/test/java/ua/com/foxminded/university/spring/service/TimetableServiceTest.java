@@ -16,6 +16,8 @@ import org.mockito.MockitoAnnotations;
 import ua.com.foxminded.university.models.Lesson;
 import ua.com.foxminded.university.models.Timeslot;
 import ua.com.foxminded.university.spring.dao.impl.LessonDaoImpl;
+import ua.com.foxminded.university.spring.dao.util.TimeslotIdLessonIdPair;
+import ua.com.foxminded.university.spring.service.exception.InvalidDataException;
 
 class TimetableServiceTest {
     
@@ -29,11 +31,11 @@ class TimetableServiceTest {
     }
     
     @Test
-    void testGetDayTimetableForTeacher_ShouldReturnTimeslotToLessonMap_WhenRequesteWithTeacherIdAndDayOfWeek() {
+    void testGetDayTimetableForTeacher_ShouldReturnTimeslotToLessonMap_WhenRequesteWithTeacherIdAndDayOfWeek() throws InvalidDataException {
         int teacherId = 0;
         DayOfWeek day = DayOfWeek.MONDAY;
         
-        List<int[]> notFormattedDayTimetable = new ArrayList<>();
+        List<TimeslotIdLessonIdPair> notFormattedDayTimetable = new ArrayList<>();
         Map<Timeslot, Lesson> expectedDayTimetable = new HashMap<>();
         
         Timeslot[] timeslots = Timeslot.values();
@@ -46,7 +48,7 @@ class TimetableServiceTest {
             Lesson lesson = new Lesson(lessonId, subjectId, teacherId, groupId, day, timeslotId);
             expectedDayTimetable.put(timeslot, lesson);
             
-            int[] timeslotIdAndLessonId = new int[] {timeslotId, lessonId};
+            TimeslotIdLessonIdPair timeslotIdAndLessonId = new TimeslotIdLessonIdPair(timeslotId, lessonId);
             notFormattedDayTimetable.add(timeslotIdAndLessonId);
             
             Mockito.when(lessonDaoImpl.getById(lessonId)).thenReturn(lesson);         
@@ -55,7 +57,7 @@ class TimetableServiceTest {
             groupId++;
         }
         
-        Mockito.when(lessonDaoImpl.getTimeslotIdAndLessonIdPairsForTeacherForDay(teacherId, day)).thenReturn(notFormattedDayTimetable);
+        Mockito.when(lessonDaoImpl.getTeachersTimeslotIdAndLessonIdPairs(teacherId, day)).thenReturn(notFormattedDayTimetable);
         
         Map<Timeslot, Lesson> actualDayTimetable = service.getDayTimetableForTeacher(teacherId, day);
         for(Timeslot timeslot: expectedDayTimetable.keySet()) {
@@ -66,7 +68,7 @@ class TimetableServiceTest {
     }
 
     @Test
-    void testGetWeekTimetableForTeacher_ShouldReturnWeekTimetableForTeacher_WhenRequestedWithTeacherId() {
+    void testGetWeekTimetableForTeacher_ShouldReturnWeekTimetableForTeacher_WhenRequestedWithTeacherId() throws InvalidDataException {
         int teacherId = 0;
         Map<DayOfWeek, Map<Timeslot, Lesson>> expectedWeekTimetable = new HashMap<>();
 
@@ -74,7 +76,7 @@ class TimetableServiceTest {
         DayOfWeek[] days = DayOfWeek.values();
         for (DayOfWeek day : days) {
             if (day != DayOfWeek.SUNDAY) {
-                List<int[]> notFormattedDayTimetable = new ArrayList<>();
+                List<TimeslotIdLessonIdPair> notFormattedDayTimetable = new ArrayList<>();
                 Map<Timeslot, Lesson> expectedDayTimetable = new HashMap<>();
 
                 Timeslot[] timeslots = Timeslot.values();
@@ -86,7 +88,7 @@ class TimetableServiceTest {
                     Lesson lesson = new Lesson(lessonId, subjectId, teacherId, groupId, day, timeslotId);
                     expectedDayTimetable.put(timeslot, lesson);
 
-                    int[] timeslotIdAndLessonId = new int[] { timeslotId, lessonId };
+                    TimeslotIdLessonIdPair timeslotIdAndLessonId = new TimeslotIdLessonIdPair(timeslotId, lessonId);
                     notFormattedDayTimetable.add(timeslotIdAndLessonId);
 
                     Mockito.when(lessonDaoImpl.getById(lessonId)).thenReturn(lesson);
@@ -94,7 +96,7 @@ class TimetableServiceTest {
                     subjectId++;
                     groupId++;
                 }
-                Mockito.when(lessonDaoImpl.getTimeslotIdAndLessonIdPairsForTeacherForDay(teacherId, day))
+                Mockito.when(lessonDaoImpl.getTeachersTimeslotIdAndLessonIdPairs(teacherId, day))
                         .thenReturn(notFormattedDayTimetable);
 
                 expectedWeekTimetable.put(day, expectedDayTimetable);
@@ -113,11 +115,11 @@ class TimetableServiceTest {
     }
 
     @Test
-    void testGetDayTimetableForGroup() {
+    void testGetDayTimetableForGroup() throws InvalidDataException {
         int groupId = 0;
         DayOfWeek day = DayOfWeek.MONDAY;
         
-        List<int[]> notFormattedDayTimetable = new ArrayList<>();
+        List<TimeslotIdLessonIdPair> notFormattedDayTimetable = new ArrayList<>();
         Map<Timeslot, Lesson> expectedDayTimetable = new HashMap<>();
         
         Timeslot[] timeslots = Timeslot.values();
@@ -130,7 +132,7 @@ class TimetableServiceTest {
             Lesson lesson = new Lesson(lessonId, subjectId, teacherId, groupId, day, timeslotId);
             expectedDayTimetable.put(timeslot, lesson);
             
-            int[] timeslotIdAndLessonId = new int[] {timeslotId, lessonId};
+            TimeslotIdLessonIdPair timeslotIdAndLessonId = new TimeslotIdLessonIdPair(timeslotId, lessonId);
             notFormattedDayTimetable.add(timeslotIdAndLessonId);
             
             Mockito.when(lessonDaoImpl.getById(lessonId)).thenReturn(lesson);         
@@ -139,7 +141,7 @@ class TimetableServiceTest {
             teacherId++;
         }
         
-        Mockito.when(lessonDaoImpl.getTimeslotIdAndLessonIdPairsForGroupForDay(groupId, day)).thenReturn(notFormattedDayTimetable);
+        Mockito.when(lessonDaoImpl.getGroupsTimeslotIdAndLessonIdPairs(groupId, day)).thenReturn(notFormattedDayTimetable);
         
         Map<Timeslot, Lesson> actualDayTimetable = service.getDayTimetableForGroup(groupId, day);
         for(Timeslot timeslot: expectedDayTimetable.keySet()) {
@@ -150,7 +152,7 @@ class TimetableServiceTest {
     }
 
     @Test
-    void testGetWeekTimetableForGroup_ShouldReturnWeekTimetableForGroup_WhenRequestedWithGroupId() {
+    void testGetWeekTimetableForGroup_ShouldReturnWeekTimetableForGroup_WhenRequestedWithGroupId() throws InvalidDataException {
         int groupId = 0;
         Map<DayOfWeek, Map<Timeslot, Lesson>> expectedWeekTimetable = new HashMap<>();
 
@@ -158,7 +160,7 @@ class TimetableServiceTest {
         DayOfWeek[] days = DayOfWeek.values();
         for (DayOfWeek day : days) {
             if (day != DayOfWeek.SUNDAY) {
-                List<int[]> notFormattedDayTimetable = new ArrayList<>();
+                List<TimeslotIdLessonIdPair> notFormattedDayTimetable = new ArrayList<>();
                 Map<Timeslot, Lesson> expectedDayTimetable = new HashMap<>();
 
                 Timeslot[] timeslots = Timeslot.values();
@@ -170,7 +172,7 @@ class TimetableServiceTest {
                     Lesson lesson = new Lesson(lessonId, subjectId, teacherId, groupId, day, timeslotId);
                     expectedDayTimetable.put(timeslot, lesson);
 
-                    int[] timeslotIdAndLessonId = new int[] { timeslotId, lessonId };
+                    TimeslotIdLessonIdPair timeslotIdAndLessonId = new TimeslotIdLessonIdPair(timeslotId, lessonId);
                     notFormattedDayTimetable.add(timeslotIdAndLessonId);
 
                     Mockito.when(lessonDaoImpl.getById(lessonId)).thenReturn(lesson);
@@ -178,7 +180,7 @@ class TimetableServiceTest {
                     subjectId++;
                     teacherId++;
                 }
-                Mockito.when(lessonDaoImpl.getTimeslotIdAndLessonIdPairsForGroupForDay(groupId, day))
+                Mockito.when(lessonDaoImpl.getGroupsTimeslotIdAndLessonIdPairs(groupId, day))
                         .thenReturn(notFormattedDayTimetable);
 
                 expectedWeekTimetable.put(day, expectedDayTimetable);

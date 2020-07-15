@@ -8,7 +8,6 @@ import static org.mockito.ArgumentMatchers.eq;
 import java.time.format.TextStyle;
 import java.time.DayOfWeek;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -22,7 +21,8 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import ua.com.foxminded.university.models.Lesson;
-import ua.com.foxminded.university.spring.dao.mappers.LessonIdTimeslotIdMapper;
+import ua.com.foxminded.university.spring.dao.mappers.TimeslotIdLessonIdMapper;
+import ua.com.foxminded.university.spring.dao.util.TimeslotIdLessonIdPair;
 import ua.com.foxminded.university.spring.dao.mappers.LessonMapper;
 
 class LessonDaoImplTest {
@@ -308,52 +308,52 @@ class LessonDaoImplTest {
     }
     
     @Test
-    void testGetTimeslotIdAndLessonIdPairsForTeacherForDay_ShouldReturnListOfTimeslotIdAndLessonIdPairs_WhenRequestedWithTeacherIdAndDayOfWeek() {
+    void testGetTeachersTimeslotIdAndLessonIdPairs_ShouldReturnListOfTimeslotIdAndLessonIdPairs_WhenRequestedWithTeacherIdAndDayOfWeek() {
         int teacherId = 0;
         DayOfWeek day = DayOfWeek.MONDAY;
         String dayString = day.getDisplayName(TextStyle.FULL, Locale.UK);
         dayString = dayString.toUpperCase();
         
-        List<int[]> expectedTimeslotIdAndLessonIdPairs = new ArrayList<>();
+        List<TimeslotIdLessonIdPair> expectedTimeslotIdAndLessonIdPairs = new ArrayList<>();
         int lessonId = 0;
         for (int timeslotId = 1; timeslotId <= 5; timeslotId++) {
-            int[] expectedTimeslotIdLessonIdPair = new int[] {timeslotId, lessonId};
+            TimeslotIdLessonIdPair expectedTimeslotIdLessonIdPair = new TimeslotIdLessonIdPair(timeslotId, lessonId);
             expectedTimeslotIdAndLessonIdPairs.add(expectedTimeslotIdLessonIdPair);
             lessonId++;
         }
-        Mockito.when(jdbcTemplate.query(eq(SQL_GET_TEACHER_DAY_TIMETABLE), eq(new Object[] { teacherId, dayString }), any(LessonIdTimeslotIdMapper.class))).thenReturn(expectedTimeslotIdAndLessonIdPairs);
+        Mockito.when(jdbcTemplate.query(eq(SQL_GET_TEACHER_DAY_TIMETABLE), eq(new Object[] { teacherId, dayString }), any(TimeslotIdLessonIdMapper.class))).thenReturn(expectedTimeslotIdAndLessonIdPairs);
         
-        List<int[]> actualTimeslotIdAndLessonIdPairs = lessonDao.getTimeslotIdAndLessonIdPairsForTeacherForDay(teacherId, day);
+        List<TimeslotIdLessonIdPair> actualTimeslotIdAndLessonIdPairs = lessonDao.getTeachersTimeslotIdAndLessonIdPairs(teacherId, day);
         
         for (int i = 0; i < expectedTimeslotIdAndLessonIdPairs.size(); i++) {
-            int[] expectedTimeslotIdLessonIdPair = expectedTimeslotIdAndLessonIdPairs.get(i);
-            int[] actualTimeslotIdAndLessonIdPair = actualTimeslotIdAndLessonIdPairs.get(i);
-            assertTrue(Arrays.equals(expectedTimeslotIdLessonIdPair, actualTimeslotIdAndLessonIdPair));
+            TimeslotIdLessonIdPair expectedTimeslotIdLessonId = expectedTimeslotIdAndLessonIdPairs.get(i);
+            TimeslotIdLessonIdPair actualTimeslotIdAndLessonId = actualTimeslotIdAndLessonIdPairs.get(i);
+            assertEquals(expectedTimeslotIdLessonId, actualTimeslotIdAndLessonId);
         }    
     }
     
     @Test
-    void testGetTimeslotIdAndLessonIdPairsForGroupForDay_ShouldReturnListOfTimeslotIdAndLessonIdPairs_WhenRequestedWithGroupIdAndDayOfWeek() {
+    void testGetGroupsTimeslotIdAndLessonIdPairs_ShouldReturnListOfTimeslotIdAndLessonIdPairs_WhenRequestedWithGroupIdAndDayOfWeek() {
         int groupId = 0;
         DayOfWeek day = DayOfWeek.MONDAY;
         String dayString = day.getDisplayName(TextStyle.FULL, Locale.UK);
         dayString = dayString.toUpperCase();
         
-        List<int[]> expectedTimeslotIdAndLessonIdPairs = new ArrayList<>();
+        List<TimeslotIdLessonIdPair> expectedTimeslotIdAndLessonIdPairs = new ArrayList<>();
         int lessonId = 0;
         for (int timeslotId = 1; timeslotId <= 5; timeslotId++) {
-            int[] expectedTimeslotIdLessonIdPair = new int[] {timeslotId, lessonId};
+            TimeslotIdLessonIdPair expectedTimeslotIdLessonIdPair = new TimeslotIdLessonIdPair(timeslotId, lessonId);
             expectedTimeslotIdAndLessonIdPairs.add(expectedTimeslotIdLessonIdPair);
             lessonId++;
         }
-        Mockito.when(jdbcTemplate.query(eq(SQL_GET_GROUP_DAY_TIMETABLE), eq(new Object[] { groupId, dayString }), any(LessonIdTimeslotIdMapper.class))).thenReturn(expectedTimeslotIdAndLessonIdPairs);
+        Mockito.when(jdbcTemplate.query(eq(SQL_GET_GROUP_DAY_TIMETABLE), eq(new Object[] { groupId, dayString }), any(TimeslotIdLessonIdMapper.class))).thenReturn(expectedTimeslotIdAndLessonIdPairs);
         
-        List<int[]> actualTimeslotIdAndLessonIdPairs = lessonDao.getTimeslotIdAndLessonIdPairsForGroupForDay(groupId, day);
+        List<TimeslotIdLessonIdPair> actualTimeslotIdAndLessonIdPairs = lessonDao.getGroupsTimeslotIdAndLessonIdPairs(groupId, day);
         
         for (int i = 0; i < expectedTimeslotIdAndLessonIdPairs.size(); i++) {
-            int[] expectedTimeslotIdLessonIdPair = expectedTimeslotIdAndLessonIdPairs.get(i);
-            int[] actualTimeslotIdAndLessonIdPair = actualTimeslotIdAndLessonIdPairs.get(i);
-            assertTrue(Arrays.equals(expectedTimeslotIdLessonIdPair, actualTimeslotIdAndLessonIdPair));
+            TimeslotIdLessonIdPair expectedTimeslotIdLessonId = expectedTimeslotIdAndLessonIdPairs.get(i);
+            TimeslotIdLessonIdPair actualTimeslotIdAndLessonId = actualTimeslotIdAndLessonIdPairs.get(i);
+            assertEquals(expectedTimeslotIdLessonId, actualTimeslotIdAndLessonId);
         }
     }
 
