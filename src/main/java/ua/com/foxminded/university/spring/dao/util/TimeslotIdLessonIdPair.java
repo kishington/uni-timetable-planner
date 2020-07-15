@@ -48,5 +48,9 @@ public class TimeslotIdLessonIdPair {
             return false;
         return true;
     }
+    @Override
+    public String toString() {
+        return "TimeslotIdLessonIdPair [timeslotId=" + timeslotId + ", lessonId=" + lessonId + "]";
+    }
     
 }

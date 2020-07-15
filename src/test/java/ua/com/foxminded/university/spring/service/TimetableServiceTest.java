@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -30,6 +31,38 @@ class TimetableServiceTest {
         service = new TimetableService(lessonDaoImpl);
     }
     
+    @Test
+    void testGetDayTimetableForTeacher_ShouldThrowInvalidDataException_WhenLessonHasInvalidFieldValues() throws InvalidDataException {
+        int teacherId = 1;
+        DayOfWeek day = DayOfWeek.MONDAY;      
+        List<TimeslotIdLessonIdPair> notFormattedDayTimetable = new ArrayList<>();
+        
+        List<Lesson> lessons = new ArrayList<>();
+        lessons.add(new Lesson(0, 1, teacherId, 1, day, 1));
+        lessons.add(new Lesson(1, 0, teacherId, 2, day, 2));
+        lessons.add(new Lesson(2, 2, 0, 3, day, 3));
+        lessons.add(new Lesson(3, 3, teacherId, 0, day, 4));
+        lessons.add(new Lesson(4, 4, teacherId, 4, null, 5));
+        lessons.add(new Lesson(5, 5, teacherId, 5, day, 0));
+       
+        for (Lesson lesson: lessons) {
+            int lessonId = lesson.getId();
+            int timeslotId = lesson.getTimeslotId();
+            TimeslotIdLessonIdPair timeslotIdAndLessonId = new TimeslotIdLessonIdPair(timeslotId, lessonId);
+            notFormattedDayTimetable.clear();
+            notFormattedDayTimetable.add(timeslotIdAndLessonId);  
+            
+            Mockito.reset(lessonDaoImpl);
+            Mockito.when(lessonDaoImpl.getTeachersTimeslotIdAndLessonIdPairs(teacherId, day)).thenReturn(notFormattedDayTimetable);
+            Mockito.when(lessonDaoImpl.getById(lessonId)).thenReturn(lesson);
+            
+            Assertions.assertThrows(InvalidDataException.class, () -> {
+                service.getDayTimetableForTeacher(teacherId, day);
+            });
+        }
+    }
+   
+
     @Test
     void testGetDayTimetableForTeacher_ShouldReturnTimeslotToLessonMap_WhenRequesteWithTeacherIdAndDayOfWeek() throws InvalidDataException {
         int teacherId = 1;
@@ -66,7 +99,9 @@ class TimetableServiceTest {
             assertEquals(expectedLesson, actualLesson);     
         }
     }
-   
+
+
+    
     @Test
     void testGetWeekTimetableForTeacher_ShouldReturnWeekTimetableForTeacher_WhenRequestedWithTeacherId() throws InvalidDataException {
         int teacherId = 1;
@@ -113,9 +148,41 @@ class TimetableServiceTest {
             });
         });
     }
+    
+    @Test
+    void testGetDayTimetableForGroup_ShouldThrowInvalidDataException_WhenLessonHasInvalidFieldValues() throws InvalidDataException {
+        int groupId = 1;
+        DayOfWeek day = DayOfWeek.MONDAY;      
+        List<TimeslotIdLessonIdPair> notFormattedDayTimetable = new ArrayList<>();
+        
+        List<Lesson> lessons = new ArrayList<>();
+        lessons.add(new Lesson(0, 1, 1, groupId, day, 1));
+        lessons.add(new Lesson(1, 0, 2, groupId, day, 2));
+        lessons.add(new Lesson(2, 2, 0, groupId, day, 3));
+        lessons.add(new Lesson(3, 3, 3, 0, day, 4));
+        lessons.add(new Lesson(4, 4, 4, groupId, null, 5));
+        lessons.add(new Lesson(5, 5, 5, groupId, day, 0));
+       
+        for (Lesson lesson: lessons) {
+            int lessonId = lesson.getId();
+            int timeslotId = lesson.getTimeslotId();
+            TimeslotIdLessonIdPair timeslotIdAndLessonId = new TimeslotIdLessonIdPair(timeslotId, lessonId);
+            notFormattedDayTimetable.clear();
+            notFormattedDayTimetable.add(timeslotIdAndLessonId);  
+            
+            Mockito.reset(lessonDaoImpl);
+            Mockito.when(lessonDaoImpl.getGroupsTimeslotIdAndLessonIdPairs(groupId, day)).thenReturn(notFormattedDayTimetable);
+            Mockito.when(lessonDaoImpl.getById(lessonId)).thenReturn(lesson);
+            
+            Assertions.assertThrows(InvalidDataException.class, () -> {
+                service.getDayTimetableForGroup(groupId, day);
+            });
+        }
+    }
+
 
     @Test
-    void testGetDayTimetableForGroup() throws InvalidDataException {
+    void testGetDayTimetableForGroup_ShouldReturnTimeslotToLessonMap_WhenRequesteWithGroupIdAndDayOfWeek() throws InvalidDataException {
         int groupId = 1;
         DayOfWeek day = DayOfWeek.MONDAY;
         
