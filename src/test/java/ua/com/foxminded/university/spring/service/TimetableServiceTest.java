@@ -32,16 +32,16 @@ class TimetableServiceTest {
     
     @Test
     void testGetDayTimetableForTeacher_ShouldReturnTimeslotToLessonMap_WhenRequesteWithTeacherIdAndDayOfWeek() throws InvalidDataException {
-        int teacherId = 0;
+        int teacherId = 1;
         DayOfWeek day = DayOfWeek.MONDAY;
         
         List<TimeslotIdLessonIdPair> notFormattedDayTimetable = new ArrayList<>();
         Map<Timeslot, Lesson> expectedDayTimetable = new HashMap<>();
         
         Timeslot[] timeslots = Timeslot.values();
-        int lessonId = 0;
-        int subjectId = 0;
-        int groupId = 0;
+        int lessonId = 1;
+        int subjectId = 1;
+        int groupId = 1;
         for(Timeslot timeslot: timeslots) {
             int timeslotId = timeslot.getId();
             
@@ -66,13 +66,13 @@ class TimetableServiceTest {
             assertEquals(expectedLesson, actualLesson);     
         }
     }
-
+   
     @Test
     void testGetWeekTimetableForTeacher_ShouldReturnWeekTimetableForTeacher_WhenRequestedWithTeacherId() throws InvalidDataException {
-        int teacherId = 0;
+        int teacherId = 1;
         Map<DayOfWeek, Map<Timeslot, Lesson>> expectedWeekTimetable = new HashMap<>();
 
-        int lessonId = 0;
+        int lessonId = 1;
         DayOfWeek[] days = DayOfWeek.values();
         for (DayOfWeek day : days) {
             if (day != DayOfWeek.SUNDAY) {
@@ -80,8 +80,8 @@ class TimetableServiceTest {
                 Map<Timeslot, Lesson> expectedDayTimetable = new HashMap<>();
 
                 Timeslot[] timeslots = Timeslot.values();
-                int subjectId = 0;
-                int groupId = 0;
+                int subjectId = 1;
+                int groupId = 1;
                 for (Timeslot timeslot : timeslots) {
                     int timeslotId = timeslot.getId();
 
@@ -116,16 +116,16 @@ class TimetableServiceTest {
 
     @Test
     void testGetDayTimetableForGroup() throws InvalidDataException {
-        int groupId = 0;
+        int groupId = 1;
         DayOfWeek day = DayOfWeek.MONDAY;
         
         List<TimeslotIdLessonIdPair> notFormattedDayTimetable = new ArrayList<>();
         Map<Timeslot, Lesson> expectedDayTimetable = new HashMap<>();
         
         Timeslot[] timeslots = Timeslot.values();
-        int lessonId = 0;
-        int subjectId = 0;
-        int teacherId = 0;
+        int lessonId = 1;
+        int subjectId = 1;
+        int teacherId = 1;
         for(Timeslot timeslot: timeslots) {
             int timeslotId = timeslot.getId();
             
@@ -153,10 +153,10 @@ class TimetableServiceTest {
 
     @Test
     void testGetWeekTimetableForGroup_ShouldReturnWeekTimetableForGroup_WhenRequestedWithGroupId() throws InvalidDataException {
-        int groupId = 0;
+        int groupId = 1;
         Map<DayOfWeek, Map<Timeslot, Lesson>> expectedWeekTimetable = new HashMap<>();
 
-        int lessonId = 0;
+        int lessonId = 1;
         DayOfWeek[] days = DayOfWeek.values();
         for (DayOfWeek day : days) {
             if (day != DayOfWeek.SUNDAY) {
@@ -164,8 +164,8 @@ class TimetableServiceTest {
                 Map<Timeslot, Lesson> expectedDayTimetable = new HashMap<>();
 
                 Timeslot[] timeslots = Timeslot.values();
-                int subjectId = 0;
-                int teacherId = 0;
+                int subjectId = 1;
+                int teacherId = 1;
                 for (Timeslot timeslot : timeslots) {
                     int timeslotId = timeslot.getId();
 
