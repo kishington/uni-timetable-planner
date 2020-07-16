@@ -7,6 +7,7 @@ import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
@@ -137,7 +138,7 @@ public class LessonDaoImpl implements LessonDao {
     public Lesson getById(int lessonId) throws ObjectNotFoundException {
         try {
             return jdbcTemplate.queryForObject(SQL_GET_LESSON_BY_ID, new Object[] { lessonId }, new LessonMapper());
-        } catch (DataAccessException e) {
+        } catch (EmptyResultDataAccessException e) {
             throw new ObjectNotFoundException(UNABLE_GET_LESSON_BY_ID, e);
         }
     }
@@ -146,7 +147,7 @@ public class LessonDaoImpl implements LessonDao {
     public List<Lesson> getAll() throws ObjectNotFoundException {
         try {
             return jdbcTemplate.query(SQL_GET_ALL, new LessonMapper());
-        } catch (DataAccessException e) {
+        } catch (EmptyResultDataAccessException e) {
             throw new ObjectNotFoundException(UNABLE_GET_ALL_LESSONS, e);
         }
     }
@@ -210,7 +211,7 @@ public class LessonDaoImpl implements LessonDao {
         day = day.toUpperCase();
         try {
             return jdbcTemplate.query(SQL_GET_LESSONS_FOR_GROUP_FOR_GIVEN_DAY, new Object[] { groupId, day }, new LessonMapper());
-        } catch (DataAccessException e) {
+        } catch (EmptyResultDataAccessException e) {
             throw new ObjectNotFoundException(UNABLE_GET_ALL_LESSONS_FOR_GROUP_FOR_DAY, e);
         }
     } 
@@ -218,7 +219,7 @@ public class LessonDaoImpl implements LessonDao {
     public List<Lesson> getAllTeacherLessonsForWeek(int teacherId) throws ObjectNotFoundException {
         try {
             return jdbcTemplate.query(SQL_GET_LESSONS_FOR_TEACHER_FOR_WEEK, new Object[] { teacherId }, new LessonMapper());
-        } catch (DataAccessException e) {
+        } catch (EmptyResultDataAccessException e) {
             throw new ObjectNotFoundException(UNABLE_GET_ALL_LESSONS_FOR_TEACHER_FOR_WEEK, e);
         }
     }
@@ -228,7 +229,7 @@ public class LessonDaoImpl implements LessonDao {
         dayString = dayString.toUpperCase();
         try {
             return jdbcTemplate.query(SQL_GET_TEACHER_DAY_TIMETABLE, new Object[] { teacherId, dayString }, new TimeslotIdLessonIdMapper());
-        } catch (DataAccessException e) {
+        } catch (EmptyResultDataAccessException e) {
             throw new ObjectNotFoundException(UNABLE_GET_TEACHERS_DAY_TIMETABLE, e);
         }
     }
@@ -238,7 +239,7 @@ public class LessonDaoImpl implements LessonDao {
         dayString = dayString.toUpperCase();
         try {
             return jdbcTemplate.query(SQL_GET_GROUP_DAY_TIMETABLE, new Object[] { groupId, dayString }, new TimeslotIdLessonIdMapper());
-        } catch (DataAccessException e) {
+        } catch (EmptyResultDataAccessException e) {
             throw new ObjectNotFoundException(UNABLE_GET_GROUPS_DAY_TIMETABLE, e);
         }
     }

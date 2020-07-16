@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
@@ -62,7 +63,7 @@ public class SubjectDaoImpl implements SubjectDao {
     public Subject getById(int subjectId) throws ObjectNotFoundException {
         try {
             return jdbcTemplate.queryForObject(SQL_GET_SUBJECT_BY_ID, new Object[] { subjectId }, new SubjectMapper());
-        } catch (DataAccessException e) {
+        } catch (EmptyResultDataAccessException e) {
             throw new ObjectNotFoundException(UNABLE_GET_SUBJECT_BY_ID, e);
         }
     }
@@ -71,7 +72,7 @@ public class SubjectDaoImpl implements SubjectDao {
     public List<Subject> getAll() throws ObjectNotFoundException {
         try {
             return jdbcTemplate.query(SQL_GET_ALL, new SubjectMapper());
-        } catch (DataAccessException e) {
+        } catch (EmptyResultDataAccessException e) {
             throw new ObjectNotFoundException(UNABLE_GET_ALL_SUBJECTS, e);
         }
     }
