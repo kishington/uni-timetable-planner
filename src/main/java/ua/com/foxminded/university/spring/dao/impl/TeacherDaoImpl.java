@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import ua.com.foxminded.university.models.Teacher;
 import ua.com.foxminded.university.spring.dao.TeacherDao;
 import ua.com.foxminded.university.spring.dao.exception.DatabaseException;
+import ua.com.foxminded.university.spring.dao.exception.ObjectNotFoundException;
 import ua.com.foxminded.university.spring.dao.mappers.TeacherMapper;
 
 @Component
@@ -61,20 +62,20 @@ public class TeacherDaoImpl implements TeacherDao {
     }
 
     @Override
-    public Teacher getById(int teacherId) throws DatabaseException {
+    public Teacher getById(int teacherId) throws ObjectNotFoundException {
         try {
             return jdbcTemplate.queryForObject(SQL_GET_TEACHER_BY_ID, new Object[] {teacherId}, new TeacherMapper());
         } catch (DataAccessException e) {
-            throw new DatabaseException(UNABLE_GET_TEACHER_BY_ID, e);
+            throw new ObjectNotFoundException(UNABLE_GET_TEACHER_BY_ID, e);
         }
     }
 
     @Override
-    public List<Teacher> getAll() throws DatabaseException {
+    public List<Teacher> getAll() throws ObjectNotFoundException {
         try {
             return jdbcTemplate.query(SQL_GET_ALL, new TeacherMapper());
         } catch (DataAccessException e) {
-            throw new DatabaseException(UNABLE_GET_ALL_TEACHERS, e);
+            throw new ObjectNotFoundException(UNABLE_GET_ALL_TEACHERS, e);
         }
     }
 

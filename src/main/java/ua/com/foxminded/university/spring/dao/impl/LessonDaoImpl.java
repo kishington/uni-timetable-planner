@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import ua.com.foxminded.university.models.Lesson;
 import ua.com.foxminded.university.spring.dao.LessonDao;
 import ua.com.foxminded.university.spring.dao.exception.DatabaseException;
+import ua.com.foxminded.university.spring.dao.exception.ObjectNotFoundException;
 import ua.com.foxminded.university.spring.dao.mappers.TimeslotIdLessonIdMapper;
 import ua.com.foxminded.university.spring.dao.util.TimeslotIdLessonIdPair;
 import ua.com.foxminded.university.spring.dao.mappers.LessonMapper;
@@ -133,20 +134,20 @@ public class LessonDaoImpl implements LessonDao {
     }
     
     @Override
-    public Lesson getById(int lessonId) throws DatabaseException {
+    public Lesson getById(int lessonId) throws ObjectNotFoundException {
         try {
             return jdbcTemplate.queryForObject(SQL_GET_LESSON_BY_ID, new Object[] { lessonId }, new LessonMapper());
         } catch (DataAccessException e) {
-            throw new DatabaseException(UNABLE_GET_LESSON_BY_ID, e);
+            throw new ObjectNotFoundException(UNABLE_GET_LESSON_BY_ID, e);
         }
     }
 
     @Override
-    public List<Lesson> getAll() throws DatabaseException {
+    public List<Lesson> getAll() throws ObjectNotFoundException {
         try {
             return jdbcTemplate.query(SQL_GET_ALL, new LessonMapper());
         } catch (DataAccessException e) {
-            throw new DatabaseException(UNABLE_GET_ALL_LESSONS, e);
+            throw new ObjectNotFoundException(UNABLE_GET_ALL_LESSONS, e);
         }
     }
 
@@ -205,40 +206,40 @@ public class LessonDaoImpl implements LessonDao {
         }
     }
 
-    public List<Lesson> getAllLessonsForDay(int groupId, String day) throws DatabaseException {
+    public List<Lesson> getAllLessonsForDay(int groupId, String day) throws ObjectNotFoundException {
         day = day.toUpperCase();
         try {
             return jdbcTemplate.query(SQL_GET_LESSONS_FOR_GROUP_FOR_GIVEN_DAY, new Object[] { groupId, day }, new LessonMapper());
         } catch (DataAccessException e) {
-            throw new DatabaseException(UNABLE_GET_ALL_LESSONS_FOR_GROUP_FOR_DAY, e);
+            throw new ObjectNotFoundException(UNABLE_GET_ALL_LESSONS_FOR_GROUP_FOR_DAY, e);
         }
     } 
     
-    public List<Lesson> getAllTeacherLessonsForWeek(int teacherId) throws DatabaseException {
+    public List<Lesson> getAllTeacherLessonsForWeek(int teacherId) throws ObjectNotFoundException {
         try {
             return jdbcTemplate.query(SQL_GET_LESSONS_FOR_TEACHER_FOR_WEEK, new Object[] { teacherId }, new LessonMapper());
         } catch (DataAccessException e) {
-            throw new DatabaseException(UNABLE_GET_ALL_LESSONS_FOR_TEACHER_FOR_WEEK, e);
+            throw new ObjectNotFoundException(UNABLE_GET_ALL_LESSONS_FOR_TEACHER_FOR_WEEK, e);
         }
     }
     
-    public List<TimeslotIdLessonIdPair> getTeachersTimeslotIdAndLessonIdPairs(int teacherId, DayOfWeek day) throws DatabaseException {
+    public List<TimeslotIdLessonIdPair> getTeachersTimeslotIdAndLessonIdPairs(int teacherId, DayOfWeek day) throws ObjectNotFoundException  {
         String dayString = day.getDisplayName(TextStyle.FULL, Locale.UK);
         dayString = dayString.toUpperCase();
         try {
             return jdbcTemplate.query(SQL_GET_TEACHER_DAY_TIMETABLE, new Object[] { teacherId, dayString }, new TimeslotIdLessonIdMapper());
         } catch (DataAccessException e) {
-            throw new DatabaseException(UNABLE_GET_TEACHERS_DAY_TIMETABLE, e);
+            throw new ObjectNotFoundException(UNABLE_GET_TEACHERS_DAY_TIMETABLE, e);
         }
     }
     
-    public List<TimeslotIdLessonIdPair> getGroupsTimeslotIdAndLessonIdPairs(int groupId, DayOfWeek day) throws DatabaseException {
+    public List<TimeslotIdLessonIdPair> getGroupsTimeslotIdAndLessonIdPairs(int groupId, DayOfWeek day) throws ObjectNotFoundException {
         String dayString = day.getDisplayName(TextStyle.FULL, Locale.UK);
         dayString = dayString.toUpperCase();
         try {
             return jdbcTemplate.query(SQL_GET_GROUP_DAY_TIMETABLE, new Object[] { groupId, dayString }, new TimeslotIdLessonIdMapper());
         } catch (DataAccessException e) {
-            throw new DatabaseException(UNABLE_GET_GROUPS_DAY_TIMETABLE, e);
+            throw new ObjectNotFoundException(UNABLE_GET_GROUPS_DAY_TIMETABLE, e);
         }
     }
 }

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import ua.com.foxminded.university.models.Subject;
 import ua.com.foxminded.university.spring.dao.SubjectDao;
 import ua.com.foxminded.university.spring.dao.exception.DatabaseException;
+import ua.com.foxminded.university.spring.dao.exception.ObjectNotFoundException;
 import ua.com.foxminded.university.spring.dao.mappers.SubjectMapper;
 
 @Component
@@ -58,20 +59,20 @@ public class SubjectDaoImpl implements SubjectDao {
     }
 
     @Override
-    public Subject getById(int subjectId) throws DatabaseException {
+    public Subject getById(int subjectId) throws ObjectNotFoundException {
         try {
             return jdbcTemplate.queryForObject(SQL_GET_SUBJECT_BY_ID, new Object[] { subjectId }, new SubjectMapper());
         } catch (DataAccessException e) {
-            throw new DatabaseException(UNABLE_GET_SUBJECT_BY_ID, e);
+            throw new ObjectNotFoundException(UNABLE_GET_SUBJECT_BY_ID, e);
         }
     }
 
     @Override
-    public List<Subject> getAll() throws DatabaseException {
+    public List<Subject> getAll() throws ObjectNotFoundException {
         try {
             return jdbcTemplate.query(SQL_GET_ALL, new SubjectMapper());
         } catch (DataAccessException e) {
-            throw new DatabaseException(UNABLE_GET_ALL_SUBJECTS, e);
+            throw new ObjectNotFoundException(UNABLE_GET_ALL_SUBJECTS, e);
         }
     }
 
