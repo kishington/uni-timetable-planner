@@ -17,7 +17,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import ua.com.foxminded.university.models.Subject;
 import ua.com.foxminded.university.spring.dao.SubjectDao;
-import ua.com.foxminded.university.spring.dao.exception.DatabaseException;
 import ua.com.foxminded.university.spring.dao.mappers.SubjectMapper;
 
 class SubjectDaoImplTest {
@@ -61,7 +60,7 @@ class SubjectDaoImplTest {
     }
 
     @Test
-    void testGetById_ShouldReturnSubject_WhenRequestedBySubjectIdAsParam() throws DatabaseException {    
+    void testGetById_ShouldReturnSubject_WhenRequestedBySubjectIdAsParam() {    
         for(int subjectId = 0; subjectId < 5; subjectId++) {
             Subject subject = new Subject();
             subject.setId(subjectId);
@@ -75,7 +74,7 @@ class SubjectDaoImplTest {
     }
     
     @Test
-    void testGetAll_ShouldReturnListOfSubjects_WhenRequestedWithNoParam() throws DatabaseException {
+    void testGetAll_ShouldReturnListOfSubjects_WhenRequestedWithNoParam() {
         List<Subject> subjects = new ArrayList<>();
         for(int subjectId = 0; subjectId < 5; subjectId++) {
             Subject subject = new Subject();
@@ -87,7 +86,7 @@ class SubjectDaoImplTest {
     }
     
     @Test
-    void testDelete_ShouldDeleteOneSubject_WhenRequestedBySubjectIdAsParam() throws DatabaseException {
+    void testDelete_ShouldDeleteOneSubject_WhenRequestedBySubjectIdAsParam() {
         Subject subject = new Subject();
         int subjectId = 0;
         subject.setId(subjectId);
@@ -96,7 +95,7 @@ class SubjectDaoImplTest {
     }
     
     @Test
-    void testDelete_ShouldDeleteZeroSubjects_WhenRequestedBySubjectIdAsParam() throws DatabaseException {
+    void testDelete_ShouldDeleteZeroSubjects_WhenRequestedBySubjectIdAsParam() {
         Subject subject = new Subject();
         int subjectId = 3;
         subject.setId(subjectId);
@@ -105,7 +104,7 @@ class SubjectDaoImplTest {
     }
     
     @Test
-    void testUpdate_ShouldReturnTrue_WhenRequestedBySubjectAsParam() throws DatabaseException {
+    void testUpdate_ShouldReturnTrue_WhenRequestedBySubjectAsParam() {
         int subjectId = 0;
         String subjectName = "Maths";
         
@@ -118,7 +117,7 @@ class SubjectDaoImplTest {
     }
     
     @Test
-    void testUpdate_ShouldReturnFalse_WhenRequestedBySubjectAsParam() throws DatabaseException {
+    void testUpdate_ShouldReturnFalse_WhenRequestedBySubjectAsParam() {
         int subjectId = 0;
         String subjectName = "Maths";
         
@@ -131,7 +130,7 @@ class SubjectDaoImplTest {
     }
     
     @Test
-    void testCreate_ShouldReturnTrue_WhenRequestedBySubjectAsParam() throws DatabaseException {
+    void testCreate_ShouldReturnTrue_WhenRequestedBySubjectAsParam() {
         int subjectId = 0;
         String subjectName = "Maths";
         
@@ -144,7 +143,7 @@ class SubjectDaoImplTest {
     }
     
     @Test
-    void testCreate_ShouldReturnFalse_WhenRequestedBySubjectAsParam() throws DatabaseException {
+    void testCreate_ShouldReturnFalse_WhenRequestedBySubjectAsParam() {
         int subjectId = 0;
         String subjectName = "Maths";
         

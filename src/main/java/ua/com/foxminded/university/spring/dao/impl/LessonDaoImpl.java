@@ -135,25 +135,29 @@ public class LessonDaoImpl implements LessonDao {
     }
     
     @Override
-    public Lesson getById(int lessonId) throws ObjectNotFoundException {
+    public Lesson getById(int lessonId) {
         try {
             return jdbcTemplate.queryForObject(SQL_GET_LESSON_BY_ID, new Object[] { lessonId }, new LessonMapper());
         } catch (EmptyResultDataAccessException e) {
             throw new ObjectNotFoundException(UNABLE_GET_LESSON_BY_ID, e);
+        } catch (DataAccessException e) {
+            throw new DatabaseException(e);
         }
     }
 
     @Override
-    public List<Lesson> getAll() throws ObjectNotFoundException {
+    public List<Lesson> getAll() {
         try {
             return jdbcTemplate.query(SQL_GET_ALL, new LessonMapper());
         } catch (EmptyResultDataAccessException e) {
             throw new ObjectNotFoundException(UNABLE_GET_ALL_LESSONS, e);
+        } catch (DataAccessException e) {
+            throw new DatabaseException(e);
         }
     }
 
     @Override
-    public boolean delete(Lesson lesson) throws DatabaseException {
+    public boolean delete(Lesson lesson) {
         try {
             return jdbcTemplate.update(SQL_DELETE_LESSON, lesson.getId()) > 0;
         } catch (DataAccessException e) {
@@ -162,7 +166,7 @@ public class LessonDaoImpl implements LessonDao {
     }
 
     @Override
-    public boolean update(Lesson lesson) throws DatabaseException {
+    public boolean update(Lesson lesson) {
         int lessonId = lesson.getId();
         int subjectId = lesson.getSubjectId();
         int teacherId = lesson.getTeacherId();
@@ -177,7 +181,7 @@ public class LessonDaoImpl implements LessonDao {
     }
     
     @Override
-    public boolean create(Lesson lesson) throws DatabaseException {
+    public boolean create(Lesson lesson) {
         int lessonId = lesson.getId();
         int subjectId = lesson.getSubjectId();
         int teacherId = lesson.getTeacherId();
@@ -191,7 +195,7 @@ public class LessonDaoImpl implements LessonDao {
         }
     }
     
-    public int getNumberOfLessonsPerWeekForTeacher(int teacherId) throws DatabaseException {      
+    public int getNumberOfLessonsPerWeekForTeacher(int teacherId) {      
         try {
             return jdbcTemplate.queryForObject(SQL_GET_NO_OF_LESSONS_PER_WEEK_FOR_TEACHER, new Object[] { teacherId }, Integer.class);
         } catch (DataAccessException e) {
@@ -199,7 +203,7 @@ public class LessonDaoImpl implements LessonDao {
         }
     }
 
-    public int getNumberOfLessonsPerWeekForGroup(int groupId) throws DatabaseException {      
+    public int getNumberOfLessonsPerWeekForGroup(int groupId) {      
         try {
             return jdbcTemplate.queryForObject(SQL_GET_NO_OF_LESSONS_PER_WEEK_FOR_GROUP, new Object[] { groupId }, Integer.class);
         } catch (DataAccessException e) {
@@ -207,40 +211,48 @@ public class LessonDaoImpl implements LessonDao {
         }
     }
 
-    public List<Lesson> getAllLessonsForDay(int groupId, String day) throws ObjectNotFoundException {
+    public List<Lesson> getAllLessonsForDay(int groupId, String day) {
         day = day.toUpperCase();
         try {
             return jdbcTemplate.query(SQL_GET_LESSONS_FOR_GROUP_FOR_GIVEN_DAY, new Object[] { groupId, day }, new LessonMapper());
         } catch (EmptyResultDataAccessException e) {
             throw new ObjectNotFoundException(UNABLE_GET_ALL_LESSONS_FOR_GROUP_FOR_DAY, e);
+        } catch (DataAccessException e) {
+            throw new DatabaseException(e);
         }
     } 
     
-    public List<Lesson> getAllTeacherLessonsForWeek(int teacherId) throws ObjectNotFoundException {
+    public List<Lesson> getAllTeacherLessonsForWeek(int teacherId) {
         try {
             return jdbcTemplate.query(SQL_GET_LESSONS_FOR_TEACHER_FOR_WEEK, new Object[] { teacherId }, new LessonMapper());
         } catch (EmptyResultDataAccessException e) {
             throw new ObjectNotFoundException(UNABLE_GET_ALL_LESSONS_FOR_TEACHER_FOR_WEEK, e);
+        } catch (DataAccessException e) {
+            throw new DatabaseException(e);
         }
     }
     
-    public List<TimeslotIdLessonIdPair> getTeachersTimeslotIdAndLessonIdPairs(int teacherId, DayOfWeek day) throws ObjectNotFoundException  {
+    public List<TimeslotIdLessonIdPair> getTeachersTimeslotIdAndLessonIdPairs(int teacherId, DayOfWeek day) {
         String dayString = day.getDisplayName(TextStyle.FULL, Locale.UK);
         dayString = dayString.toUpperCase();
         try {
             return jdbcTemplate.query(SQL_GET_TEACHER_DAY_TIMETABLE, new Object[] { teacherId, dayString }, new TimeslotIdLessonIdMapper());
         } catch (EmptyResultDataAccessException e) {
             throw new ObjectNotFoundException(UNABLE_GET_TEACHERS_DAY_TIMETABLE, e);
+        } catch (DataAccessException e) {
+            throw new DatabaseException(e);
         }
     }
     
-    public List<TimeslotIdLessonIdPair> getGroupsTimeslotIdAndLessonIdPairs(int groupId, DayOfWeek day) throws ObjectNotFoundException {
+    public List<TimeslotIdLessonIdPair> getGroupsTimeslotIdAndLessonIdPairs(int groupId, DayOfWeek day) {
         String dayString = day.getDisplayName(TextStyle.FULL, Locale.UK);
         dayString = dayString.toUpperCase();
         try {
             return jdbcTemplate.query(SQL_GET_GROUP_DAY_TIMETABLE, new Object[] { groupId, dayString }, new TimeslotIdLessonIdMapper());
         } catch (EmptyResultDataAccessException e) {
             throw new ObjectNotFoundException(UNABLE_GET_GROUPS_DAY_TIMETABLE, e);
+        } catch (DataAccessException e) {
+            throw new DatabaseException(e);
         }
     }
 }

@@ -1,6 +1,6 @@
 package ua.com.foxminded.university.spring.dao.exception;
 
-public class DatabaseException extends Exception {
+public class DatabaseException extends RuntimeException {
     
     private static final long serialVersionUID = -4041899048452167994L;
 

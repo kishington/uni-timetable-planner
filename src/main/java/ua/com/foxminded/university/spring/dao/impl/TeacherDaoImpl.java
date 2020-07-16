@@ -63,25 +63,29 @@ public class TeacherDaoImpl implements TeacherDao {
     }
 
     @Override
-    public Teacher getById(int teacherId) throws ObjectNotFoundException {
+    public Teacher getById(int teacherId) {
         try {
             return jdbcTemplate.queryForObject(SQL_GET_TEACHER_BY_ID, new Object[] {teacherId}, new TeacherMapper());
         } catch (EmptyResultDataAccessException e) {
             throw new ObjectNotFoundException(UNABLE_GET_TEACHER_BY_ID, e);
+        } catch (DataAccessException e) {
+            throw new DatabaseException(e);
         }
     }
 
     @Override
-    public List<Teacher> getAll() throws ObjectNotFoundException {
+    public List<Teacher> getAll() {
         try {
             return jdbcTemplate.query(SQL_GET_ALL, new TeacherMapper());
         } catch (EmptyResultDataAccessException e) {
             throw new ObjectNotFoundException(UNABLE_GET_ALL_TEACHERS, e);
+        } catch (DataAccessException e) {
+            throw new DatabaseException(e);
         }
     }
 
     @Override
-    public boolean delete(Teacher teacher) throws DatabaseException {
+    public boolean delete(Teacher teacher) {
         try {
             return jdbcTemplate.update(SQL_DELETE_TEACHER, teacher.getId()) > 0;
         } catch (DataAccessException e) {
@@ -90,7 +94,7 @@ public class TeacherDaoImpl implements TeacherDao {
     }
 
     @Override
-    public boolean update(Teacher teacher) throws DatabaseException {
+    public boolean update(Teacher teacher) {
         try {
             return jdbcTemplate.update(SQL_UPDATE_TEACHER, teacher.getFirstName(), teacher.getLastName(), teacher.getId()) > 0;
         } catch (DataAccessException e) {
@@ -99,7 +103,7 @@ public class TeacherDaoImpl implements TeacherDao {
     }
 
     @Override
-    public boolean create(Teacher teacher) throws DatabaseException {
+    public boolean create(Teacher teacher) {
         try {
             return jdbcTemplate.update(SQL_INSERT_TEACHER, teacher.getId(), teacher.getFirstName(), teacher.getLastName()) > 0;
         } catch (DataAccessException e) {

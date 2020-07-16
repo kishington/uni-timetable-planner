@@ -60,25 +60,29 @@ public class SubjectDaoImpl implements SubjectDao {
     }
 
     @Override
-    public Subject getById(int subjectId) throws ObjectNotFoundException {
+    public Subject getById(int subjectId) {
         try {
             return jdbcTemplate.queryForObject(SQL_GET_SUBJECT_BY_ID, new Object[] { subjectId }, new SubjectMapper());
         } catch (EmptyResultDataAccessException e) {
             throw new ObjectNotFoundException(UNABLE_GET_SUBJECT_BY_ID, e);
+        } catch (DataAccessException e) {
+            throw new DatabaseException(e);
         }
     }
 
     @Override
-    public List<Subject> getAll() throws ObjectNotFoundException {
+    public List<Subject> getAll() {
         try {
             return jdbcTemplate.query(SQL_GET_ALL, new SubjectMapper());
         } catch (EmptyResultDataAccessException e) {
             throw new ObjectNotFoundException(UNABLE_GET_ALL_SUBJECTS, e);
+        } catch (DataAccessException e) {
+            throw new DatabaseException(e);
         }
     }
 
     @Override
-    public boolean delete(Subject subject) throws DatabaseException {
+    public boolean delete(Subject subject) {
         try {
             return jdbcTemplate.update(SQL_DELETE_SUBJECT, subject.getId()) > 0;
         } catch (DataAccessException e) {
@@ -87,7 +91,7 @@ public class SubjectDaoImpl implements SubjectDao {
     }
 
     @Override
-    public boolean update(Subject subject) throws DatabaseException {
+    public boolean update(Subject subject) {
         try {
             return jdbcTemplate.update(SQL_UPDATE_SUBJECT, subject.getName(), subject.getId()) > 0;
         } catch (DataAccessException e) {
@@ -96,7 +100,7 @@ public class SubjectDaoImpl implements SubjectDao {
     }
 
     @Override
-    public boolean create(Subject subject) throws DatabaseException {
+    public boolean create(Subject subject) {
         try {
             return jdbcTemplate.update(SQL_INSERT_SUBJECT, subject.getId(), subject.getName()) > 0;
         } catch (DataAccessException e) {

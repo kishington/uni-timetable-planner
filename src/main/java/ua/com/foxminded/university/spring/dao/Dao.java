@@ -2,19 +2,16 @@ package ua.com.foxminded.university.spring.dao;
 
 import java.util.List;
 
-import ua.com.foxminded.university.spring.dao.exception.DatabaseException;
-import ua.com.foxminded.university.spring.dao.exception.ObjectNotFoundException;
-
 public interface Dao<T> {
    
-    T getById(int id) throws ObjectNotFoundException;
+    T getById(int id);
     
-    List<T> getAll() throws ObjectNotFoundException;
+    List<T> getAll();
      
-    boolean delete(T t) throws DatabaseException;
+    boolean delete(T t);
      
-    boolean update(T t) throws DatabaseException;
+    boolean update(T t);
      
-    boolean create(T t) throws DatabaseException;
+    boolean create(T t);
     
 }
