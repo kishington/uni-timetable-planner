@@ -58,7 +58,7 @@ public enum Timeslot {
 
     @Override
     public String toString() {
-        return "Timeslot [id=" + id + "]";
+        return "Timeslot [id=" + id + ", startTime=" + startTime + ", endTime=" + endTime + "]";
     }
 
 }

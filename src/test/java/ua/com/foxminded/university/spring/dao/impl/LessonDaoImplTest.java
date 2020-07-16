@@ -23,6 +23,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import ua.com.foxminded.university.models.Lesson;
 import ua.com.foxminded.university.spring.dao.mappers.TimeslotIdLessonIdMapper;
 import ua.com.foxminded.university.spring.dao.util.TimeslotIdLessonIdPair;
+import ua.com.foxminded.university.spring.dao.exception.DatabaseException;
 import ua.com.foxminded.university.spring.dao.mappers.LessonMapper;
 
 class LessonDaoImplTest {
@@ -118,7 +119,7 @@ class LessonDaoImplTest {
     }
     
     @Test
-    void testGetById_ShouldReturnLesson_WhenRequestedByLessonIdAsParam() {   
+    void testGetById_ShouldReturnLesson_WhenRequestedByLessonIdAsParam() throws DatabaseException {   
         for(int lessonId = 0; lessonId < 5; lessonId++) {
             Lesson lesson = new Lesson();
             lesson.setId(lessonId);
@@ -132,7 +133,7 @@ class LessonDaoImplTest {
     }
 
     @Test
-    void testGetAll_ShouldReturnListOfLessons_WhenRequestedWithNoParam() {
+    void testGetAll_ShouldReturnListOfLessons_WhenRequestedWithNoParam() throws DatabaseException {
         List<Lesson> lessons = new ArrayList<>();
         for(int lessonId = 0; lessonId < 5; lessonId++) {
             Lesson lesson = new Lesson();
@@ -144,7 +145,7 @@ class LessonDaoImplTest {
     }
 
     @Test
-    void testDelete_ShouldDeleteOneLesson_WhenRequestedByLessonIdAsParam() {
+    void testDelete_ShouldDeleteOneLesson_WhenRequestedByLessonIdAsParam() throws DatabaseException {
         Lesson lesson = new Lesson();
         int lessonId = 0;
         lesson.setId(lessonId);
@@ -153,7 +154,7 @@ class LessonDaoImplTest {
     }
     
     @Test
-    void testDelete_ShouldDeleteTwoLessons_WhenRequestedByLessonIdAsParam() {
+    void testDelete_ShouldDeleteTwoLessons_WhenRequestedByLessonIdAsParam() throws DatabaseException {
         Lesson lesson = new Lesson();
         int lessonId = 1;
         lesson.setId(lessonId);
@@ -162,7 +163,7 @@ class LessonDaoImplTest {
     }
     
     @Test
-    void testDelete_ShouldDeleteZeroLessons_WhenRequestedByLessonIdAsParam() {
+    void testDelete_ShouldDeleteZeroLessons_WhenRequestedByLessonIdAsParam() throws DatabaseException {
         Lesson lesson = new Lesson();
         int lessonId = 3;
         lesson.setId(lessonId);
@@ -171,7 +172,7 @@ class LessonDaoImplTest {
     }
 
     @Test
-    void testUpdate_ShouldReturnTrue_WhenRequestedByLessonAsParam() {
+    void testUpdate_ShouldReturnTrue_WhenRequestedByLessonAsParam() throws DatabaseException {
         Lesson lesson = new Lesson();
         initialise(lesson, 0, 0, 0, 0, DayOfWeek.MONDAY, 1);
         
@@ -187,7 +188,7 @@ class LessonDaoImplTest {
     }
     
     @Test
-    void testUpdate_ShouldReturnFalse_WhenRequestedByLessonAsParam() {
+    void testUpdate_ShouldReturnFalse_WhenRequestedByLessonAsParam() throws DatabaseException {
         Lesson lesson = new Lesson();
         initialise(lesson, 0, 0, 0, 0, DayOfWeek.MONDAY, 1);
         
@@ -204,7 +205,7 @@ class LessonDaoImplTest {
     }  
 
     @Test
-    void testCreate_ShouldReturnTrue_WhenRequestedByLessonAsParam() {
+    void testCreate_ShouldReturnTrue_WhenRequestedByLessonAsParam() throws DatabaseException {
         Lesson lesson = new Lesson();
         initialise(lesson, 0, 0, 0, 0, DayOfWeek.MONDAY, 1);
         
@@ -227,7 +228,7 @@ class LessonDaoImplTest {
     }
     
     @Test
-    void testCreate_ShouldReturnFalse_WhenRequestedByLessonAsParam() {
+    void testCreate_ShouldReturnFalse_WhenRequestedByLessonAsParam() throws DatabaseException {
         Lesson lesson = new Lesson();
         initialise(lesson, 0, 0, 0, 0, DayOfWeek.MONDAY, 1);
         
@@ -243,7 +244,7 @@ class LessonDaoImplTest {
     }
     
     @Test
-    void testGetNumberOfLessonsPerWeekForTeacher_ShouldReturnZero_WhenTeacherIdDosntExist() {
+    void testGetNumberOfLessonsPerWeekForTeacher_ShouldReturnZero_WhenTeacherIdDosntExist() throws DatabaseException {
         int teacherId = 0;
         Mockito.when(jdbcTemplate.queryForObject(SQL_GET_NO_OF_LESSONS_PER_WEEK_FOR_TEACHER, new Object[] { teacherId }, Integer.class)).thenReturn(0);
         int expectedNumberOfLessons = 0;
@@ -252,7 +253,7 @@ class LessonDaoImplTest {
     }
     
     @Test
-    void testGetNumberOfLessonsPerWeekForTeacher_ShouldReturnPositiveInt_WhenTeacherIdAndLessonsExist() {
+    void testGetNumberOfLessonsPerWeekForTeacher_ShouldReturnPositiveInt_WhenTeacherIdAndLessonsExist() throws DatabaseException {
         int teacherId = 0;
         Mockito.when(jdbcTemplate.queryForObject(SQL_GET_NO_OF_LESSONS_PER_WEEK_FOR_TEACHER, new Object[] { teacherId }, Integer.class)).thenReturn(4);
         int expectedNumberOfLessons = 4;
@@ -261,7 +262,7 @@ class LessonDaoImplTest {
     }
     
     @Test
-    void testGetNumberOfLessonsPerWeekForGroup_ShouldReturnZero_WhenGroupIdDoesntExist() {
+    void testGetNumberOfLessonsPerWeekForGroup_ShouldReturnZero_WhenGroupIdDoesntExist() throws DatabaseException {
         int groupId = 0;
         Mockito.when(jdbcTemplate.queryForObject(SQL_GET_NO_OF_LESSONS_PER_WEEK_FOR_GROUP, new Object[] { groupId }, Integer.class)).thenReturn(0);
         int expectedNumberOfLessons = 0;
@@ -270,7 +271,7 @@ class LessonDaoImplTest {
     }
     
     @Test
-    void testGetNumberOfLessonsPerWeekForGroup_ShouldPositiveInt_WhenGroupIdAndLessonsExist() {
+    void testGetNumberOfLessonsPerWeekForGroup_ShouldPositiveInt_WhenGroupIdAndLessonsExist() throws DatabaseException {
         int groupId = 0;
         Mockito.when(jdbcTemplate.queryForObject(SQL_GET_NO_OF_LESSONS_PER_WEEK_FOR_GROUP, new Object[] { groupId }, Integer.class)).thenReturn(10);
         int expectedNumberOfLessons = 10;
@@ -279,7 +280,7 @@ class LessonDaoImplTest {
     }
     
     @Test
-    void testGetAllLessonsForWeek_ShouldReturnListOfLessons_WhenRequestedByGroupIdAndDay() {
+    void testGetAllLessonsForWeek_ShouldReturnListOfLessons_WhenRequestedByGroupIdAndDay() throws DatabaseException {
         int groupId = 1;
         String dayString = "THURSDAY";
         DayOfWeek day = DayOfWeek.valueOf(dayString);
@@ -308,7 +309,7 @@ class LessonDaoImplTest {
     }
     
     @Test
-    void testGetTeachersTimeslotIdAndLessonIdPairs_ShouldReturnListOfTimeslotIdAndLessonIdPairs_WhenRequestedWithTeacherIdAndDayOfWeek() {
+    void testGetTeachersTimeslotIdAndLessonIdPairs_ShouldReturnListOfTimeslotIdAndLessonIdPairs_WhenRequestedWithTeacherIdAndDayOfWeek() throws DatabaseException {
         int teacherId = 0;
         DayOfWeek day = DayOfWeek.MONDAY;
         String dayString = day.getDisplayName(TextStyle.FULL, Locale.UK);
@@ -333,7 +334,7 @@ class LessonDaoImplTest {
     }
     
     @Test
-    void testGetGroupsTimeslotIdAndLessonIdPairs_ShouldReturnListOfTimeslotIdAndLessonIdPairs_WhenRequestedWithGroupIdAndDayOfWeek() {
+    void testGetGroupsTimeslotIdAndLessonIdPairs_ShouldReturnListOfTimeslotIdAndLessonIdPairs_WhenRequestedWithGroupIdAndDayOfWeek() throws DatabaseException {
         int groupId = 0;
         DayOfWeek day = DayOfWeek.MONDAY;
         String dayString = day.getDisplayName(TextStyle.FULL, Locale.UK);

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import ua.com.foxminded.university.models.Lesson;
 import ua.com.foxminded.university.models.Timeslot;
 import ua.com.foxminded.university.models.Timetable;
+import ua.com.foxminded.university.spring.dao.exception.DatabaseException;
 import ua.com.foxminded.university.spring.dao.impl.LessonDaoImpl;
 import ua.com.foxminded.university.spring.dao.util.TimeslotIdLessonIdPair;
 import ua.com.foxminded.university.spring.service.exception.InvalidDataException;
@@ -34,7 +35,7 @@ public class TimetableService {
         this.lessonDaoImpl = lessonDaoImpl;
     }
     
-    public Map<Timeslot, Lesson> getDayTimetableForTeacher(int teacherId, DayOfWeek day) throws InvalidDataException {
+    public Map<Timeslot, Lesson> getDayTimetableForTeacher(int teacherId, DayOfWeek day) throws InvalidDataException, DatabaseException {
         List<TimeslotIdLessonIdPair> notFormattedDayTimetable = lessonDaoImpl.getTeachersTimeslotIdAndLessonIdPairs(teacherId, day);
 
         Map<Timeslot, Lesson> dayTimetable = new HashMap<>();
@@ -45,7 +46,7 @@ public class TimetableService {
             Timeslot timeslot = null;
             try {
                 timeslot = Timeslot.getTimeslotById(timeslotId);
-            } catch (Exception e) {
+            } catch (IllegalArgumentException e) {
                 throw new InvalidDataException(INVALID_TIMESLOT_ID, e);
             }
             Lesson lesson = lessonDaoImpl.getById(lessonId);
@@ -55,7 +56,7 @@ public class TimetableService {
         return dayTimetable;
     } 
 
-    public Timetable getWeekTimetableForTeacher(int teacherId) throws InvalidDataException {
+    public Timetable getWeekTimetableForTeacher(int teacherId) throws InvalidDataException, DatabaseException {
         Map<DayOfWeek, Map<Timeslot, Lesson>> timetableValue = new HashMap<>();
         for (DayOfWeek day : DayOfWeek.values()) {
             Map<Timeslot, Lesson> dayTimetable = getDayTimetableForTeacher(teacherId, day);
@@ -66,7 +67,7 @@ public class TimetableService {
         return timetable;
     }
 
-    public Map<Timeslot, Lesson> getDayTimetableForGroup(int groupId, DayOfWeek day) throws InvalidDataException {
+    public Map<Timeslot, Lesson> getDayTimetableForGroup(int groupId, DayOfWeek day) throws InvalidDataException, DatabaseException {
         List<TimeslotIdLessonIdPair> notFormattedDayTimetable = lessonDaoImpl.getGroupsTimeslotIdAndLessonIdPairs(groupId, day);
         Map<Timeslot, Lesson> dayTimetable = new HashMap<>();
         for(int i = 0; i < notFormattedDayTimetable.size(); i++) {
@@ -77,7 +78,7 @@ public class TimetableService {
             Timeslot timeslot = null;
             try {
                 timeslot = Timeslot.getTimeslotById(timeslotId);
-            } catch (Exception e) {
+            } catch (IllegalArgumentException e) {
                 throw new InvalidDataException(INVALID_TIMESLOT_ID, e);
             }
             Lesson lesson = lessonDaoImpl.getById(lessonId);
@@ -87,7 +88,7 @@ public class TimetableService {
         return dayTimetable;
     }
     
-    public Timetable getWeekTimetableForGroup(int groupId) throws InvalidDataException {
+    public Timetable getWeekTimetableForGroup(int groupId) throws InvalidDataException, DatabaseException {
         Map<DayOfWeek, Map<Timeslot, Lesson>> timetableValue = new HashMap<>();
         for (DayOfWeek day : DayOfWeek.values()) {
             Map<Timeslot, Lesson> dayTimetable = getDayTimetableForGroup(groupId, day);

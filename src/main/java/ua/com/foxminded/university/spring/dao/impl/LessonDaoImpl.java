@@ -6,11 +6,13 @@ import java.util.List;
 import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import ua.com.foxminded.university.models.Lesson;
 import ua.com.foxminded.university.spring.dao.LessonDao;
+import ua.com.foxminded.university.spring.dao.exception.DatabaseException;
 import ua.com.foxminded.university.spring.dao.mappers.TimeslotIdLessonIdMapper;
 import ua.com.foxminded.university.spring.dao.util.TimeslotIdLessonIdPair;
 import ua.com.foxminded.university.spring.dao.mappers.LessonMapper;
@@ -111,6 +113,18 @@ public class LessonDaoImpl implements LessonDao {
             "  group_id = ?\n" + 
             "  and upper(day) = ?\n";
     
+    private static final String UNABLE_GET_LESSON_BY_ID = "Unable to get lesson by id from the database.";
+    private static final String UNABLE_GET_ALL_LESSONS = "Unable to get all lessons from the database.";
+    private static final String UNABLE_DELETE_LESSON = "Unable to delete lesson from the database.";
+    private static final String UNABLE_UPDATE_LESSON = "Unable to update lesson in the database.";
+    private static final String UNABLE_CREATE_LESSON = "Unable to insert create in the database.";
+    private static final String UNABLE_COUNT_LESSONS_FOR_TEACHER = "Unable to count lessons for teacher in the database.";
+    private static final String UNABLE_COUNT_LESSONS_FOR_GROUP = "Unable to count lessons for group in the database.";
+    private static final String UNABLE_GET_ALL_LESSONS_FOR_GROUP_FOR_DAY = "Unable to get all lessons for group from the database.";
+    private static final String UNABLE_GET_ALL_LESSONS_FOR_TEACHER_FOR_WEEK = "Unable to get all lessons for teacher from the database.";
+    private static final String UNABLE_GET_TEACHERS_DAY_TIMETABLE = "Unable to get teachers day timetable from the database.";
+    private static final String UNABLE_GET_GROUPS_DAY_TIMETABLE = "Unable to get groups day timetable from the database.";
+
     private JdbcTemplate jdbcTemplate;
     
     @Autowired
@@ -119,68 +133,112 @@ public class LessonDaoImpl implements LessonDao {
     }
     
     @Override
-    public Lesson getById(int lessonId) {
-        return jdbcTemplate.queryForObject(SQL_GET_LESSON_BY_ID, new Object[] { lessonId }, new LessonMapper());
+    public Lesson getById(int lessonId) throws DatabaseException {
+        try {
+            return jdbcTemplate.queryForObject(SQL_GET_LESSON_BY_ID, new Object[] { lessonId }, new LessonMapper());
+        } catch (DataAccessException e) {
+            throw new DatabaseException(UNABLE_GET_LESSON_BY_ID, e);
+        }
     }
 
     @Override
-    public List<Lesson> getAll() {
-        return jdbcTemplate.query(SQL_GET_ALL, new LessonMapper());
+    public List<Lesson> getAll() throws DatabaseException {
+        try {
+            return jdbcTemplate.query(SQL_GET_ALL, new LessonMapper());
+        } catch (DataAccessException e) {
+            throw new DatabaseException(UNABLE_GET_ALL_LESSONS, e);
+        }
     }
 
     @Override
-    public boolean delete(Lesson lesson) {
-        return jdbcTemplate.update(SQL_DELETE_LESSON, lesson.getId()) > 0;
+    public boolean delete(Lesson lesson) throws DatabaseException {
+        try {
+            return jdbcTemplate.update(SQL_DELETE_LESSON, lesson.getId()) > 0;
+        } catch (DataAccessException e) {
+            throw new DatabaseException(UNABLE_DELETE_LESSON, e);
+        }
     }
 
     @Override
-    public boolean update(Lesson lesson) {
+    public boolean update(Lesson lesson) throws DatabaseException {
         int lessonId = lesson.getId();
         int subjectId = lesson.getSubjectId();
         int teacherId = lesson.getTeacherId();
         int groupId = lesson.getGroupId();
         int timeslotId = lesson.getTimeslotId();
         String day = lesson.getDay().getDisplayName(TextStyle.FULL, Locale.UK);     
-        return jdbcTemplate.update(SQL_UPDATE_LESSON, subjectId, teacherId, groupId, day, timeslotId, lessonId) > 0;
+        try {
+            return jdbcTemplate.update(SQL_UPDATE_LESSON, subjectId, teacherId, groupId, day, timeslotId, lessonId) > 0;
+        } catch (DataAccessException e) {
+            throw new DatabaseException(UNABLE_UPDATE_LESSON, e);
+        }
     }
     
     @Override
-    public boolean create(Lesson lesson) {
+    public boolean create(Lesson lesson) throws DatabaseException {
         int lessonId = lesson.getId();
         int subjectId = lesson.getSubjectId();
         int teacherId = lesson.getTeacherId();
         int groupId = lesson.getGroupId();
         int timeslotId = lesson.getTimeslotId();
         String day = lesson.getDay().getDisplayName(TextStyle.FULL, Locale.UK); 
-        return jdbcTemplate.update(SQL_INSERT_LESSON, lessonId, subjectId, teacherId, groupId, day, timeslotId) > 0;
+        try {
+            return jdbcTemplate.update(SQL_INSERT_LESSON, lessonId, subjectId, teacherId, groupId, day, timeslotId) > 0;
+        } catch (DataAccessException e) {
+            throw new DatabaseException(UNABLE_CREATE_LESSON, e);
+        }
     }
     
-    public int getNumberOfLessonsPerWeekForTeacher(int teacherId) {      
-        return jdbcTemplate.queryForObject(SQL_GET_NO_OF_LESSONS_PER_WEEK_FOR_TEACHER, new Object[] { teacherId }, Integer.class);
+    public int getNumberOfLessonsPerWeekForTeacher(int teacherId) throws DatabaseException {      
+        try {
+            return jdbcTemplate.queryForObject(SQL_GET_NO_OF_LESSONS_PER_WEEK_FOR_TEACHER, new Object[] { teacherId }, Integer.class);
+        } catch (DataAccessException e) {
+            throw new DatabaseException(UNABLE_COUNT_LESSONS_FOR_TEACHER, e);
+        }
     }
 
-    public int getNumberOfLessonsPerWeekForGroup(int groupId) {      
-        return jdbcTemplate.queryForObject(SQL_GET_NO_OF_LESSONS_PER_WEEK_FOR_GROUP, new Object[] { groupId }, Integer.class);
+    public int getNumberOfLessonsPerWeekForGroup(int groupId) throws DatabaseException {      
+        try {
+            return jdbcTemplate.queryForObject(SQL_GET_NO_OF_LESSONS_PER_WEEK_FOR_GROUP, new Object[] { groupId }, Integer.class);
+        } catch (DataAccessException e) {
+            throw new DatabaseException(UNABLE_COUNT_LESSONS_FOR_GROUP, e);
+        }
     }
 
-    public List<Lesson> getAllLessonsForDay(int groupId, String day) {
+    public List<Lesson> getAllLessonsForDay(int groupId, String day) throws DatabaseException {
         day = day.toUpperCase();
-        return jdbcTemplate.query(SQL_GET_LESSONS_FOR_GROUP_FOR_GIVEN_DAY, new Object[] { groupId, day }, new LessonMapper());
+        try {
+            return jdbcTemplate.query(SQL_GET_LESSONS_FOR_GROUP_FOR_GIVEN_DAY, new Object[] { groupId, day }, new LessonMapper());
+        } catch (DataAccessException e) {
+            throw new DatabaseException(UNABLE_GET_ALL_LESSONS_FOR_GROUP_FOR_DAY, e);
+        }
     } 
     
-    public List<Lesson> getAllTeacherLessonsForWeek(int teacherId) {
-        return jdbcTemplate.query(SQL_GET_LESSONS_FOR_TEACHER_FOR_WEEK, new Object[] { teacherId }, new LessonMapper());
+    public List<Lesson> getAllTeacherLessonsForWeek(int teacherId) throws DatabaseException {
+        try {
+            return jdbcTemplate.query(SQL_GET_LESSONS_FOR_TEACHER_FOR_WEEK, new Object[] { teacherId }, new LessonMapper());
+        } catch (DataAccessException e) {
+            throw new DatabaseException(UNABLE_GET_ALL_LESSONS_FOR_TEACHER_FOR_WEEK, e);
+        }
     }
     
-    public List<TimeslotIdLessonIdPair> getTeachersTimeslotIdAndLessonIdPairs(int teacherId, DayOfWeek day) {
+    public List<TimeslotIdLessonIdPair> getTeachersTimeslotIdAndLessonIdPairs(int teacherId, DayOfWeek day) throws DatabaseException {
         String dayString = day.getDisplayName(TextStyle.FULL, Locale.UK);
         dayString = dayString.toUpperCase();
-        return jdbcTemplate.query(SQL_GET_TEACHER_DAY_TIMETABLE, new Object[] { teacherId, dayString }, new TimeslotIdLessonIdMapper());
+        try {
+            return jdbcTemplate.query(SQL_GET_TEACHER_DAY_TIMETABLE, new Object[] { teacherId, dayString }, new TimeslotIdLessonIdMapper());
+        } catch (DataAccessException e) {
+            throw new DatabaseException(UNABLE_GET_TEACHERS_DAY_TIMETABLE, e);
+        }
     }
     
-    public List<TimeslotIdLessonIdPair> getGroupsTimeslotIdAndLessonIdPairs(int groupId, DayOfWeek day) {
+    public List<TimeslotIdLessonIdPair> getGroupsTimeslotIdAndLessonIdPairs(int groupId, DayOfWeek day) throws DatabaseException {
         String dayString = day.getDisplayName(TextStyle.FULL, Locale.UK);
         dayString = dayString.toUpperCase();
-        return jdbcTemplate.query(SQL_GET_GROUP_DAY_TIMETABLE, new Object[] { groupId, dayString }, new TimeslotIdLessonIdMapper());
+        try {
+            return jdbcTemplate.query(SQL_GET_GROUP_DAY_TIMETABLE, new Object[] { groupId, dayString }, new TimeslotIdLessonIdMapper());
+        } catch (DataAccessException e) {
+            throw new DatabaseException(UNABLE_GET_GROUPS_DAY_TIMETABLE, e);
+        }
     }
 }

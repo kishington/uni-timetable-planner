@@ -16,6 +16,7 @@ import org.mockito.MockitoAnnotations;
 
 import ua.com.foxminded.university.models.Lesson;
 import ua.com.foxminded.university.models.Timeslot;
+import ua.com.foxminded.university.spring.dao.exception.DatabaseException;
 import ua.com.foxminded.university.spring.dao.impl.LessonDaoImpl;
 import ua.com.foxminded.university.spring.dao.util.TimeslotIdLessonIdPair;
 import ua.com.foxminded.university.spring.service.exception.InvalidDataException;
@@ -32,7 +33,7 @@ class TimetableServiceTest {
     }
     
     @Test
-    void testGetDayTimetableForTeacher_ShouldThrowInvalidDataException_WhenLessonHasInvalidFieldValues() throws InvalidDataException {
+    void testGetDayTimetableForTeacher_ShouldThrowInvalidDataException_WhenLessonHasInvalidFieldValues() throws InvalidDataException, DatabaseException {
         int teacherId = 1;
         DayOfWeek day = DayOfWeek.MONDAY;      
         List<TimeslotIdLessonIdPair> notFormattedDayTimetable = new ArrayList<>();
@@ -64,7 +65,7 @@ class TimetableServiceTest {
    
 
     @Test
-    void testGetDayTimetableForTeacher_ShouldReturnTimeslotToLessonMap_WhenRequesteWithTeacherIdAndDayOfWeek() throws InvalidDataException {
+    void testGetDayTimetableForTeacher_ShouldReturnTimeslotToLessonMap_WhenRequesteWithTeacherIdAndDayOfWeek() throws InvalidDataException, DatabaseException {
         int teacherId = 1;
         DayOfWeek day = DayOfWeek.MONDAY;
         
@@ -103,7 +104,7 @@ class TimetableServiceTest {
 
     
     @Test
-    void testGetWeekTimetableForTeacher_ShouldReturnWeekTimetableForTeacher_WhenRequestedWithTeacherId() throws InvalidDataException {
+    void testGetWeekTimetableForTeacher_ShouldReturnWeekTimetableForTeacher_WhenRequestedWithTeacherId() throws InvalidDataException, DatabaseException {
         int teacherId = 1;
         Map<DayOfWeek, Map<Timeslot, Lesson>> expectedWeekTimetable = new HashMap<>();
 
@@ -150,7 +151,7 @@ class TimetableServiceTest {
     }
     
     @Test
-    void testGetDayTimetableForGroup_ShouldThrowInvalidDataException_WhenLessonHasInvalidFieldValues() throws InvalidDataException {
+    void testGetDayTimetableForGroup_ShouldThrowInvalidDataException_WhenLessonHasInvalidFieldValues() throws InvalidDataException, DatabaseException {
         int groupId = 1;
         DayOfWeek day = DayOfWeek.MONDAY;      
         List<TimeslotIdLessonIdPair> notFormattedDayTimetable = new ArrayList<>();
@@ -182,7 +183,7 @@ class TimetableServiceTest {
 
 
     @Test
-    void testGetDayTimetableForGroup_ShouldReturnTimeslotToLessonMap_WhenRequesteWithGroupIdAndDayOfWeek() throws InvalidDataException {
+    void testGetDayTimetableForGroup_ShouldReturnTimeslotToLessonMap_WhenRequesteWithGroupIdAndDayOfWeek() throws InvalidDataException, DatabaseException {
         int groupId = 1;
         DayOfWeek day = DayOfWeek.MONDAY;
         
@@ -219,7 +220,7 @@ class TimetableServiceTest {
     }
 
     @Test
-    void testGetWeekTimetableForGroup_ShouldReturnWeekTimetableForGroup_WhenRequestedWithGroupId() throws InvalidDataException {
+    void testGetWeekTimetableForGroup_ShouldReturnWeekTimetableForGroup_WhenRequestedWithGroupId() throws InvalidDataException, DatabaseException {
         int groupId = 1;
         Map<DayOfWeek, Map<Timeslot, Lesson>> expectedWeekTimetable = new HashMap<>();
 
