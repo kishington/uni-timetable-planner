@@ -1,6 +1,6 @@
 package ua.com.foxminded.university.spring.service.exception;
 
-public class InvalidDataException extends Exception {
+public class InvalidDataException extends RuntimeException {
     
     private static final long serialVersionUID = 1101722093854179386L;
     

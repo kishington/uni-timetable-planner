@@ -16,7 +16,6 @@ import org.mockito.MockitoAnnotations;
 
 import ua.com.foxminded.university.models.Lesson;
 import ua.com.foxminded.university.models.Timeslot;
-import ua.com.foxminded.university.spring.dao.exception.DatabaseException;
 import ua.com.foxminded.university.spring.dao.impl.LessonDaoImpl;
 import ua.com.foxminded.university.spring.dao.util.TimeslotIdLessonIdPair;
 import ua.com.foxminded.university.spring.service.exception.InvalidDataException;
@@ -65,7 +64,7 @@ class TimetableServiceTest {
    
 
     @Test
-    void testGetDayTimetableForTeacher_ShouldReturnTimeslotToLessonMap_WhenRequesteWithTeacherIdAndDayOfWeek() throws DatabaseException, InvalidDataException {
+    void testGetDayTimetableForTeacher_ShouldReturnTimeslotToLessonMap_WhenRequesteWithTeacherIdAndDayOfWeek() {
         int teacherId = 1;
         DayOfWeek day = DayOfWeek.MONDAY;
         
@@ -104,7 +103,7 @@ class TimetableServiceTest {
 
     
     @Test
-    void testGetWeekTimetableForTeacher_ShouldReturnWeekTimetableForTeacher_WhenRequestedWithTeacherId() throws DatabaseException, InvalidDataException {
+    void testGetWeekTimetableForTeacher_ShouldReturnWeekTimetableForTeacher_WhenRequestedWithTeacherId() {
         int teacherId = 1;
         Map<DayOfWeek, Map<Timeslot, Lesson>> expectedWeekTimetable = new HashMap<>();
 
@@ -183,7 +182,7 @@ class TimetableServiceTest {
 
 
     @Test
-    void testGetDayTimetableForGroup_ShouldReturnTimeslotToLessonMap_WhenRequesteWithGroupIdAndDayOfWeek() throws DatabaseException, InvalidDataException {
+    void testGetDayTimetableForGroup_ShouldReturnTimeslotToLessonMap_WhenRequesteWithGroupIdAndDayOfWeek() {
         int groupId = 1;
         DayOfWeek day = DayOfWeek.MONDAY;
         
@@ -220,7 +219,7 @@ class TimetableServiceTest {
     }
 
     @Test
-    void testGetWeekTimetableForGroup_ShouldReturnWeekTimetableForGroup_WhenRequestedWithGroupId() throws DatabaseException, InvalidDataException {
+    void testGetWeekTimetableForGroup_ShouldReturnWeekTimetableForGroup_WhenRequestedWithGroupId() {
         int groupId = 1;
         Map<DayOfWeek, Map<Timeslot, Lesson>> expectedWeekTimetable = new HashMap<>();
 
