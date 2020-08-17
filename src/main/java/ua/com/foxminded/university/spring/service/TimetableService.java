@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +29,7 @@ public class TimetableService {
     private static final String INVALID_GROUP_ID = "Invalid groupId for lessonId = ";
     private static final String INVALID_DAY_ID = "Day is null for lessonId = ";
     
+    private static final Logger LOG = LoggerFactory.getLogger("ua.com.foxminded.university.spring.service");
     private LessonDaoImpl lessonDaoImpl;
     
     @Autowired
@@ -46,7 +49,9 @@ public class TimetableService {
             try {
                 timeslot = Timeslot.getTimeslotById(timeslotId);
             } catch (IllegalArgumentException e) {
-                throw new InvalidDataException(INVALID_TIMESLOT_ID, e);
+                InvalidDataException rethrownException = new InvalidDataException(INVALID_TIMESLOT_ID, e);
+                LOG.error(rethrownException.getMessage(), rethrownException);
+                throw rethrownException;
             }
             Lesson lesson = lessonDaoImpl.getById(lessonId);
             validate(lesson);
@@ -78,7 +83,9 @@ public class TimetableService {
             try {
                 timeslot = Timeslot.getTimeslotById(timeslotId);
             } catch (IllegalArgumentException e) {
-                throw new InvalidDataException(INVALID_TIMESLOT_ID, e);
+                InvalidDataException rethrownException = new InvalidDataException(INVALID_TIMESLOT_ID, e);
+                LOG.error(rethrownException.getMessage(), rethrownException);
+                throw rethrownException;
             }
             Lesson lesson = lessonDaoImpl.getById(lessonId);
             validate(lesson);
@@ -110,22 +117,34 @@ public class TimetableService {
         int highestTimeslotId = Timeslot.getHighestId();
         
         if(lessonId == INVALID_ID_VALUE) {
-            throw new InvalidDataException(INVALID_LESSON_ID);
+            InvalidDataException rethrownException = new InvalidDataException(INVALID_LESSON_ID);
+            LOG.error(rethrownException.getMessage(), rethrownException);
+            throw rethrownException;
         }
         if(subjectId == INVALID_ID_VALUE) {
-            throw new InvalidDataException(INVALID_SUBJECT_ID + lessonId);
+            InvalidDataException rethrownException = new InvalidDataException(INVALID_SUBJECT_ID + lessonId);
+            LOG.error(rethrownException.getMessage(), rethrownException);
+            throw rethrownException;
         }
         if(teachertId == INVALID_ID_VALUE) {
-            throw new InvalidDataException(INVALID_TEACHER_ID + lessonId);
+            InvalidDataException rethrownException = new InvalidDataException(INVALID_TEACHER_ID + lessonId);
+            LOG.error(rethrownException.getMessage(), rethrownException);
+            throw rethrownException;
         }
         if(groupId == INVALID_ID_VALUE) {
-            throw new InvalidDataException(INVALID_GROUP_ID + lessonId);
+            InvalidDataException rethrownException = new InvalidDataException(INVALID_GROUP_ID + lessonId);
+            LOG.error(rethrownException.getMessage(), rethrownException);
+            throw rethrownException;
         }
         if(day == null) {
-            throw new InvalidDataException(INVALID_DAY_ID + lessonId);
+            InvalidDataException rethrownException = new InvalidDataException(INVALID_DAY_ID + lessonId);
+            LOG.error(rethrownException.getMessage(), rethrownException);
+            throw rethrownException;
         }
         if(timeslotId < lowestTimeslotId || timeslotId > highestTimeslotId) {
-            throw new InvalidDataException(INVALID_TIMESLOT_ID);
+            InvalidDataException rethrownException = new InvalidDataException(INVALID_TIMESLOT_ID);
+            LOG.error(rethrownException.getMessage(), rethrownException);
+            throw rethrownException;
         }
     }
 }

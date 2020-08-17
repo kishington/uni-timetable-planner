@@ -2,6 +2,8 @@ package ua.com.foxminded.university.spring.dao.impl;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -51,7 +53,9 @@ public class SubjectDaoImpl implements SubjectDao {
     private static final String UNABLE_DELETE_SUBJECT = "Unable to delete subject from the database.";
     private static final String UNABLE_UPDATE_SUBJECT = "Unable to update subject in the database.";
     private static final String UNABLE_CREATE_SUBJECT = "Unable to insert subject in the database.";
+    private static final String QUERY_EXECUTION_WENT_WRONG= "Something went wrong during SQL Query execution.";
 
+    private static final Logger LOG = LoggerFactory.getLogger("ua.com.foxminded.university.spring.dao.impl");
     private JdbcTemplate jdbcTemplate;
     
     @Autowired
@@ -64,9 +68,13 @@ public class SubjectDaoImpl implements SubjectDao {
         try {
             return jdbcTemplate.queryForObject(SQL_GET_SUBJECT_BY_ID, new Object[] { subjectId }, new SubjectMapper());
         } catch (EmptyResultDataAccessException e) {
-            throw new ObjectNotFoundException(UNABLE_GET_SUBJECT_BY_ID, e);
+            ObjectNotFoundException rethrownException = new ObjectNotFoundException(UNABLE_GET_SUBJECT_BY_ID, e);
+            LOG.error(rethrownException.getMessage(), rethrownException);
+            throw rethrownException;
         } catch (DataAccessException e) {
-            throw new DatabaseException(e);
+            DatabaseException rethrownException = new DatabaseException(QUERY_EXECUTION_WENT_WRONG, e);
+            LOG.error(rethrownException.getMessage(), rethrownException);
+            throw rethrownException;
         }
     }
 
@@ -75,9 +83,13 @@ public class SubjectDaoImpl implements SubjectDao {
         try {
             return jdbcTemplate.query(SQL_GET_ALL, new SubjectMapper());
         } catch (EmptyResultDataAccessException e) {
-            throw new ObjectNotFoundException(UNABLE_GET_ALL_SUBJECTS, e);
+            ObjectNotFoundException rethrownException = new ObjectNotFoundException(UNABLE_GET_ALL_SUBJECTS, e);
+            LOG.error(rethrownException.getMessage(), rethrownException);
+            throw rethrownException;
         } catch (DataAccessException e) {
-            throw new DatabaseException(e);
+            DatabaseException rethrownException = new DatabaseException(QUERY_EXECUTION_WENT_WRONG, e);
+            LOG.error(rethrownException.getMessage(), rethrownException);
+            throw rethrownException;
         }
     }
 
@@ -86,7 +98,9 @@ public class SubjectDaoImpl implements SubjectDao {
         try {
             return jdbcTemplate.update(SQL_DELETE_SUBJECT, subject.getId()) > 0;
         } catch (DataAccessException e) {
-            throw new DatabaseException(UNABLE_DELETE_SUBJECT, e);
+            DatabaseException rethrownException = new DatabaseException(UNABLE_DELETE_SUBJECT, e);
+            LOG.error(rethrownException.getMessage(), rethrownException);
+            throw rethrownException;
         }
     }
 
@@ -95,7 +109,9 @@ public class SubjectDaoImpl implements SubjectDao {
         try {
             return jdbcTemplate.update(SQL_UPDATE_SUBJECT, subject.getName(), subject.getId()) > 0;
         } catch (DataAccessException e) {
-            throw new DatabaseException(UNABLE_UPDATE_SUBJECT, e);
+            DatabaseException rethrownException = new DatabaseException(UNABLE_UPDATE_SUBJECT, e);
+            LOG.error(rethrownException.getMessage(), rethrownException);
+            throw rethrownException;
         }
     }
 
@@ -104,7 +120,9 @@ public class SubjectDaoImpl implements SubjectDao {
         try {
             return jdbcTemplate.update(SQL_INSERT_SUBJECT, subject.getId(), subject.getName()) > 0;
         } catch (DataAccessException e) {
-            throw new DatabaseException(UNABLE_CREATE_SUBJECT, e);
+            DatabaseException rethrownException = new DatabaseException(UNABLE_CREATE_SUBJECT, e);
+            LOG.error(rethrownException.getMessage(), rethrownException);
+            throw rethrownException;
         }
     }
 

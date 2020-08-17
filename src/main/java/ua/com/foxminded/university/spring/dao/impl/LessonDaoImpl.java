@@ -5,6 +5,8 @@ import java.time.format.TextStyle;
 import java.util.List;
 import java.util.Locale;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -126,7 +128,9 @@ public class LessonDaoImpl implements LessonDao {
     private static final String UNABLE_GET_ALL_LESSONS_FOR_TEACHER_FOR_WEEK = "Unable to get all lessons for teacher from the database.";
     private static final String UNABLE_GET_TEACHERS_DAY_TIMETABLE = "Unable to get teachers day timetable from the database.";
     private static final String UNABLE_GET_GROUPS_DAY_TIMETABLE = "Unable to get groups day timetable from the database.";
+    private static final String QUERY_EXECUTION_WENT_WRONG= "Something went wrong during SQL Query execution.";
 
+    private static final Logger LOG = LoggerFactory.getLogger("ua.com.foxminded.university.spring.dao.impl");
     private JdbcTemplate jdbcTemplate;
     
     @Autowired
@@ -139,9 +143,13 @@ public class LessonDaoImpl implements LessonDao {
         try {
             return jdbcTemplate.queryForObject(SQL_GET_LESSON_BY_ID, new Object[] { lessonId }, new LessonMapper());
         } catch (EmptyResultDataAccessException e) {
-            throw new ObjectNotFoundException(UNABLE_GET_LESSON_BY_ID, e);
+            ObjectNotFoundException rethrownException = new ObjectNotFoundException(UNABLE_GET_LESSON_BY_ID, e);
+            LOG.error(rethrownException.getMessage(), rethrownException);
+            throw rethrownException;
         } catch (DataAccessException e) {
-            throw new DatabaseException(e);
+            DatabaseException rethrownException = new DatabaseException(QUERY_EXECUTION_WENT_WRONG, e);
+            LOG.error(rethrownException.getMessage(), rethrownException);
+            throw rethrownException;
         }
     }
 
@@ -150,9 +158,13 @@ public class LessonDaoImpl implements LessonDao {
         try {
             return jdbcTemplate.query(SQL_GET_ALL, new LessonMapper());
         } catch (EmptyResultDataAccessException e) {
-            throw new ObjectNotFoundException(UNABLE_GET_ALL_LESSONS, e);
+            ObjectNotFoundException rethrownException = new ObjectNotFoundException(UNABLE_GET_ALL_LESSONS, e);
+            LOG.error(rethrownException.getMessage(), rethrownException);
+            throw rethrownException;
         } catch (DataAccessException e) {
-            throw new DatabaseException(e);
+            DatabaseException rethrownException = new DatabaseException(QUERY_EXECUTION_WENT_WRONG, e);
+            LOG.error(rethrownException.getMessage(), rethrownException);
+            throw rethrownException;
         }
     }
 
@@ -161,7 +173,9 @@ public class LessonDaoImpl implements LessonDao {
         try {
             return jdbcTemplate.update(SQL_DELETE_LESSON, lesson.getId()) > 0;
         } catch (DataAccessException e) {
-            throw new DatabaseException(UNABLE_DELETE_LESSON, e);
+            DatabaseException rethrownException = new DatabaseException(UNABLE_DELETE_LESSON, e);
+            LOG.error(rethrownException.getMessage(), rethrownException);
+            throw rethrownException;
         }
     }
 
@@ -176,7 +190,9 @@ public class LessonDaoImpl implements LessonDao {
         try {
             return jdbcTemplate.update(SQL_UPDATE_LESSON, subjectId, teacherId, groupId, day, timeslotId, lessonId) > 0;
         } catch (DataAccessException e) {
-            throw new DatabaseException(UNABLE_UPDATE_LESSON, e);
+            DatabaseException rethrownException = new DatabaseException(UNABLE_UPDATE_LESSON, e);
+            LOG.error(rethrownException.getMessage(), rethrownException);
+            throw rethrownException;
         }
     }
     
@@ -191,7 +207,9 @@ public class LessonDaoImpl implements LessonDao {
         try {
             return jdbcTemplate.update(SQL_INSERT_LESSON, lessonId, subjectId, teacherId, groupId, day, timeslotId) > 0;
         } catch (DataAccessException e) {
-            throw new DatabaseException(UNABLE_CREATE_LESSON, e);
+            DatabaseException rethrownException = new DatabaseException(UNABLE_CREATE_LESSON, e);
+            LOG.error(rethrownException.getMessage(), rethrownException);
+            throw rethrownException;
         }
     }
     
@@ -199,7 +217,9 @@ public class LessonDaoImpl implements LessonDao {
         try {
             return jdbcTemplate.queryForObject(SQL_GET_NO_OF_LESSONS_PER_WEEK_FOR_TEACHER, new Object[] { teacherId }, Integer.class);
         } catch (DataAccessException e) {
-            throw new DatabaseException(UNABLE_COUNT_LESSONS_FOR_TEACHER, e);
+            DatabaseException rethrownException = new DatabaseException(UNABLE_COUNT_LESSONS_FOR_TEACHER, e);
+            LOG.error(rethrownException.getMessage(), rethrownException);
+            throw rethrownException;
         }
     }
 
@@ -207,7 +227,9 @@ public class LessonDaoImpl implements LessonDao {
         try {
             return jdbcTemplate.queryForObject(SQL_GET_NO_OF_LESSONS_PER_WEEK_FOR_GROUP, new Object[] { groupId }, Integer.class);
         } catch (DataAccessException e) {
-            throw new DatabaseException(UNABLE_COUNT_LESSONS_FOR_GROUP, e);
+            DatabaseException rethrownException = new DatabaseException(UNABLE_COUNT_LESSONS_FOR_GROUP, e);
+            LOG.error(rethrownException.getMessage(), rethrownException);
+            throw rethrownException;
         }
     }
 
@@ -216,9 +238,13 @@ public class LessonDaoImpl implements LessonDao {
         try {
             return jdbcTemplate.query(SQL_GET_LESSONS_FOR_GROUP_FOR_GIVEN_DAY, new Object[] { groupId, day }, new LessonMapper());
         } catch (EmptyResultDataAccessException e) {
-            throw new ObjectNotFoundException(UNABLE_GET_ALL_LESSONS_FOR_GROUP_FOR_DAY, e);
+            ObjectNotFoundException rethrownException = new ObjectNotFoundException(UNABLE_GET_ALL_LESSONS_FOR_GROUP_FOR_DAY, e);
+            LOG.error(rethrownException.getMessage(), rethrownException);
+            throw rethrownException;
         } catch (DataAccessException e) {
-            throw new DatabaseException(e);
+            DatabaseException rethrownException = new DatabaseException(QUERY_EXECUTION_WENT_WRONG, e);
+            LOG.error(rethrownException.getMessage(), rethrownException);
+            throw rethrownException;
         }
     } 
     
@@ -226,9 +252,13 @@ public class LessonDaoImpl implements LessonDao {
         try {
             return jdbcTemplate.query(SQL_GET_LESSONS_FOR_TEACHER_FOR_WEEK, new Object[] { teacherId }, new LessonMapper());
         } catch (EmptyResultDataAccessException e) {
-            throw new ObjectNotFoundException(UNABLE_GET_ALL_LESSONS_FOR_TEACHER_FOR_WEEK, e);
+            DatabaseException rethrownException = new ObjectNotFoundException(UNABLE_GET_ALL_LESSONS_FOR_TEACHER_FOR_WEEK, e);
+            LOG.error(rethrownException.getMessage(), rethrownException);
+            throw rethrownException;
         } catch (DataAccessException e) {
-            throw new DatabaseException(e);
+            DatabaseException rethrownException = new DatabaseException(QUERY_EXECUTION_WENT_WRONG, e);
+            LOG.error(rethrownException.getMessage(), rethrownException);
+            throw rethrownException;
         }
     }
     
@@ -238,9 +268,13 @@ public class LessonDaoImpl implements LessonDao {
         try {
             return jdbcTemplate.query(SQL_GET_TEACHER_DAY_TIMETABLE, new Object[] { teacherId, dayString }, new TimeslotIdLessonIdMapper());
         } catch (EmptyResultDataAccessException e) {
-            throw new ObjectNotFoundException(UNABLE_GET_TEACHERS_DAY_TIMETABLE, e);
+            ObjectNotFoundException rethrownException = new ObjectNotFoundException(UNABLE_GET_TEACHERS_DAY_TIMETABLE, e);
+            LOG.error(rethrownException.getMessage(), rethrownException);
+            throw rethrownException;
         } catch (DataAccessException e) {
-            throw new DatabaseException(e);
+            DatabaseException rethrownException = new DatabaseException(QUERY_EXECUTION_WENT_WRONG, e);
+            LOG.error(rethrownException.getMessage(), rethrownException);
+            throw rethrownException;
         }
     }
     
@@ -250,9 +284,13 @@ public class LessonDaoImpl implements LessonDao {
         try {
             return jdbcTemplate.query(SQL_GET_GROUP_DAY_TIMETABLE, new Object[] { groupId, dayString }, new TimeslotIdLessonIdMapper());
         } catch (EmptyResultDataAccessException e) {
-            throw new ObjectNotFoundException(UNABLE_GET_GROUPS_DAY_TIMETABLE, e);
+            ObjectNotFoundException rethrownException = new ObjectNotFoundException(UNABLE_GET_GROUPS_DAY_TIMETABLE, e);
+            LOG.error(rethrownException.getMessage(), rethrownException);
+            throw rethrownException;
         } catch (DataAccessException e) {
-            throw new DatabaseException(e);
+            DatabaseException rethrownException = new DatabaseException(QUERY_EXECUTION_WENT_WRONG, e);
+            LOG.error(rethrownException.getMessage(), rethrownException);
+            throw rethrownException;
         }
     }
 }

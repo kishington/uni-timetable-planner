@@ -4,4 +4,6 @@ bin/
 .classpath
 .project
 *.properties
+/logs
+
 
