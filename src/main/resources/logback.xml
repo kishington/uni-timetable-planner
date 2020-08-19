@@ -5,29 +5,49 @@
     <property name="LOGS_HOME" value="./logs/" />
 
     <appender name="DAO-LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOGS_HOME}DAO.log</file>
+        <file>${LOGS_HOME}DAO/DAO.log</file>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <Pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</Pattern>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOGS_HOME}DAO.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <fileNamePattern>${LOGS_HOME}DAO/DAO.%d{yyyy-MM-dd-HH-mm}.%i.log</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>100MB</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>
         </rollingPolicy>
     </appender>
-    
+    <appender name="SERVICE-LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOGS_HOME}service/service.log</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</Pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOGS_HOME}service/service.%d{yyyy-MM-dd-HH-mm}.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>100MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+    </appender>
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
 
-    <logger name="ua.com.foxminded.university.spring.dao.impl" level="ERROR">
+    <logger name="ua.com.foxminded.university.spring.dao.impl.LessonDaoImpl" level="DEBUG">
         <appender-ref ref="DAO-LOG" />
     </logger>
+    <logger name="ua.com.foxminded.university.spring.dao.impl.SubjectDaoImpl" level="DEBUG">
+        <appender-ref ref="DAO-LOG" />
+    </logger>
+    <logger name="ua.com.foxminded.university.spring.dao.impl.TeacherDaoImpl" level="DEBUG">
+        <appender-ref ref="DAO-LOG" />
+    </logger>
+     <logger name="ua.com.foxminded.university.spring.service.TimetableService" level="DEBUG">
+        <appender-ref ref="SERVICE-LOG" />
+    </logger>
 
-    <root level="ERROR">
+    <root level="WARN">
         <appender-ref ref="STDOUT" />
     </root>
     

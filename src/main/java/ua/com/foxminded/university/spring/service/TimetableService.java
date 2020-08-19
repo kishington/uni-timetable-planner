@@ -20,6 +20,8 @@ import ua.com.foxminded.university.spring.service.exception.InvalidDataException
 @Service
 public class TimetableService {
     
+    private static final Logger LOG = LoggerFactory.getLogger(TimetableService.class);
+    
     private static final int INVALID_ID_VALUE = 0;
     
     private static final String INVALID_TIMESLOT_ID = "Invalid timeslotId.";
@@ -29,7 +31,6 @@ public class TimetableService {
     private static final String INVALID_GROUP_ID = "Invalid groupId for lessonId = ";
     private static final String INVALID_DAY_ID = "Day is null for lessonId = ";
     
-    private static final Logger LOG = LoggerFactory.getLogger("ua.com.foxminded.university.spring.service");
     private LessonDaoImpl lessonDaoImpl;
     
     @Autowired

@@ -19,6 +19,8 @@ import ua.com.foxminded.university.spring.dao.mappers.TeacherMapper;
 @Component
 public class TeacherDaoImpl implements TeacherDao {
     
+    private static final Logger LOG = LoggerFactory.getLogger(TeacherDaoImpl.class);
+    
     private static final String SQL_GET_TEACHER_BY_ID = "" + 
             "select\n" + 
             "  *\n" + 
@@ -58,7 +60,6 @@ public class TeacherDaoImpl implements TeacherDao {
     private static final String UNABLE_CREATE_TEACHER = "Unable to insert teacher in the database.";
     private static final String QUERY_EXECUTION_WENT_WRONG= "Something went wrong during SQL Query execution.";
     
-    private static final Logger LOG = LoggerFactory.getLogger("ua.com.foxminded.university.spring.dao.impl");
     private JdbcTemplate jdbcTemplate;
    
     @Autowired
@@ -69,10 +70,13 @@ public class TeacherDaoImpl implements TeacherDao {
     @Override
     public Teacher getById(int teacherId) {
         try {
-            return jdbcTemplate.queryForObject(SQL_GET_TEACHER_BY_ID, new Object[] {teacherId}, new TeacherMapper());
+            Teacher teacher = jdbcTemplate.queryForObject(SQL_GET_TEACHER_BY_ID, new Object[] {teacherId}, new TeacherMapper());
+            String message = "getById " + teacher.toString();
+            LOG.debug(message);
+            return teacher;
         } catch (EmptyResultDataAccessException e) {
             ObjectNotFoundException rethrownException = new ObjectNotFoundException(UNABLE_GET_TEACHER_BY_ID, e);
-            LOG.error(rethrownException.getMessage(), rethrownException);
+            LOG.info(rethrownException.getMessage(), rethrownException);
             throw rethrownException;
         } catch (DataAccessException e) {
             DatabaseException rethrownException = new DatabaseException(QUERY_EXECUTION_WENT_WRONG, e);
@@ -87,7 +91,7 @@ public class TeacherDaoImpl implements TeacherDao {
             return jdbcTemplate.query(SQL_GET_ALL, new TeacherMapper());
         } catch (EmptyResultDataAccessException e) {
             ObjectNotFoundException rethrownException = new ObjectNotFoundException(UNABLE_GET_ALL_TEACHERS, e);
-            LOG.error(rethrownException.getMessage(), rethrownException);
+            LOG.info(rethrownException.getMessage(), rethrownException);
             throw rethrownException;
         } catch (DataAccessException e) {
             DatabaseException rethrownException = new DatabaseException(QUERY_EXECUTION_WENT_WRONG, e);
@@ -99,6 +103,8 @@ public class TeacherDaoImpl implements TeacherDao {
     @Override
     public boolean delete(Teacher teacher) {
         try {
+            String message = "delete " + teacher.toString();
+            LOG.debug(message);
             return jdbcTemplate.update(SQL_DELETE_TEACHER, teacher.getId()) > 0;
         } catch (DataAccessException e) {
             DatabaseException rethrownException = new DatabaseException(UNABLE_DELETE_TEACHER, e);
@@ -110,6 +116,8 @@ public class TeacherDaoImpl implements TeacherDao {
     @Override
     public boolean update(Teacher teacher) {
         try {
+            String message = "update " + teacher.toString();
+            LOG.debug(message);
             return jdbcTemplate.update(SQL_UPDATE_TEACHER, teacher.getFirstName(), teacher.getLastName(), teacher.getId()) > 0;
         } catch (DataAccessException e) {
             DatabaseException rethrownException = new DatabaseException(UNABLE_UPDATE_TEACHER, e);
@@ -121,6 +129,8 @@ public class TeacherDaoImpl implements TeacherDao {
     @Override
     public boolean create(Teacher teacher) {
         try {
+            String message = "create " + teacher.toString();
+            LOG.debug(message);
             return jdbcTemplate.update(SQL_INSERT_TEACHER, teacher.getId(), teacher.getFirstName(), teacher.getLastName()) > 0;
         } catch (DataAccessException e) {
             DatabaseException rethrownException = new DatabaseException(UNABLE_CREATE_TEACHER, e);
