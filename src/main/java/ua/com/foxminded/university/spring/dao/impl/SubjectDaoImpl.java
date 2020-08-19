@@ -68,8 +68,7 @@ public class SubjectDaoImpl implements SubjectDao {
     public Subject getById(int subjectId) {
         try {
             Subject subject = jdbcTemplate.queryForObject(SQL_GET_SUBJECT_BY_ID, new Object[] { subjectId }, new SubjectMapper());
-            String message = "getById " + subject.toString();
-            LOG.debug(message);
+            LOG.debug("Received subject: {}", subject);
             return subject;
         } catch (EmptyResultDataAccessException e) {
             ObjectNotFoundException rethrownException = new ObjectNotFoundException(UNABLE_GET_SUBJECT_BY_ID, e);
@@ -100,9 +99,15 @@ public class SubjectDaoImpl implements SubjectDao {
     @Override
     public boolean delete(Subject subject) {
         try {
-            String message = "delete " + subject.toString();
-            LOG.debug(message);
-            return jdbcTemplate.update(SQL_DELETE_SUBJECT, subject.getId()) > 0;
+            boolean isSubjectDeleted = jdbcTemplate.update(SQL_DELETE_SUBJECT, subject.getId()) > 0;
+            String logMessage;
+            if(isSubjectDeleted) {
+                logMessage = "Deleted subject: " + subject;
+            } else {
+                logMessage = "Subject not deleted: " + subject;
+            }
+            LOG.debug(logMessage);
+            return isSubjectDeleted;
         } catch (DataAccessException e) {
             DatabaseException rethrownException = new DatabaseException(UNABLE_DELETE_SUBJECT, e);
             LOG.error(rethrownException.getMessage(), rethrownException);
@@ -113,9 +118,15 @@ public class SubjectDaoImpl implements SubjectDao {
     @Override
     public boolean update(Subject subject) {
         try {
-            String message = "update " + subject.toString();
-            LOG.debug(message);
-            return jdbcTemplate.update(SQL_UPDATE_SUBJECT, subject.getName(), subject.getId()) > 0;
+            boolean isSubjectUpdated = jdbcTemplate.update(SQL_UPDATE_SUBJECT, subject.getName(), subject.getId()) > 0;
+            String logMessage;
+            if(isSubjectUpdated) {
+                logMessage = "Updated subject: " + subject;
+            } else {
+                logMessage = "Subject not updated: " + subject;
+            }
+            LOG.debug(logMessage);
+            return isSubjectUpdated;
         } catch (DataAccessException e) {
             DatabaseException rethrownException = new DatabaseException(UNABLE_UPDATE_SUBJECT, e);
             LOG.error(rethrownException.getMessage(), rethrownException);
@@ -126,9 +137,15 @@ public class SubjectDaoImpl implements SubjectDao {
     @Override
     public boolean create(Subject subject) {
         try {
-            String message = "create " + subject.toString();
-            LOG.debug(message);
-            return jdbcTemplate.update(SQL_INSERT_SUBJECT, subject.getId(), subject.getName()) > 0;
+            boolean isSubjectCreated = jdbcTemplate.update(SQL_INSERT_SUBJECT, subject.getId(), subject.getName()) > 0;
+            String logMessage;
+            if(isSubjectCreated) {
+                logMessage = "Created subject: " + subject;
+            } else {
+                logMessage = "Subject not created: " + subject;
+            }
+            LOG.debug(logMessage);
+            return isSubjectCreated;
         } catch (DataAccessException e) {
             DatabaseException rethrownException = new DatabaseException(UNABLE_CREATE_SUBJECT, e);
             LOG.error(rethrownException.getMessage(), rethrownException);

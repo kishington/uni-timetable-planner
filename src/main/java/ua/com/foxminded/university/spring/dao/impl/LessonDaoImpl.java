@@ -143,8 +143,7 @@ public class LessonDaoImpl implements LessonDao {
     public Lesson getById(int lessonId) {
         try {
             Lesson lesson = jdbcTemplate.queryForObject(SQL_GET_LESSON_BY_ID, new Object[] { lessonId }, new LessonMapper());
-            String message = "getById " + lesson.toString();
-            LOG.debug(message);
+            LOG.debug("Received lesson: {}", lesson);
             return lesson;
         } catch (EmptyResultDataAccessException e) {
             ObjectNotFoundException rethrownException = new ObjectNotFoundException(UNABLE_GET_LESSON_BY_ID, e);
@@ -175,9 +174,15 @@ public class LessonDaoImpl implements LessonDao {
     @Override
     public boolean delete(Lesson lesson) {
         try {
-            String message = "delete " + lesson.toString();
-            LOG.debug(message);
-            return jdbcTemplate.update(SQL_DELETE_LESSON, lesson.getId()) > 0;
+            boolean isLessonDeleted = jdbcTemplate.update(SQL_DELETE_LESSON, lesson.getId()) > 0;
+            String logMessage;
+            if(isLessonDeleted) {
+                logMessage = "Deleted lesson: " + lesson;
+            } else {
+                logMessage = "Lesson not deleted: " + lesson;
+            }
+            LOG.debug(logMessage);
+            return isLessonDeleted;
         } catch (DataAccessException e) {
             DatabaseException rethrownException = new DatabaseException(UNABLE_DELETE_LESSON, e);
             LOG.error(rethrownException.getMessage(), rethrownException);
@@ -194,9 +199,15 @@ public class LessonDaoImpl implements LessonDao {
         int timeslotId = lesson.getTimeslotId();
         String day = lesson.getDay().getDisplayName(TextStyle.FULL, Locale.UK);     
         try {
-            String message = "update " + lesson.toString();
-            LOG.debug(message);
-            return jdbcTemplate.update(SQL_UPDATE_LESSON, subjectId, teacherId, groupId, day, timeslotId, lessonId) > 0;
+            boolean isLessonUpdated = jdbcTemplate.update(SQL_UPDATE_LESSON, subjectId, teacherId, groupId, day, timeslotId, lessonId) > 0;
+            String logMessage;
+            if(isLessonUpdated) {
+                logMessage = "Updated lesson: " + lesson;
+            } else {
+                logMessage = "Lesson not updated: " + lesson;
+            }
+            LOG.debug(logMessage);
+            return isLessonUpdated;
         } catch (DataAccessException e) {
             DatabaseException rethrownException = new DatabaseException(UNABLE_UPDATE_LESSON, e);
             LOG.error(rethrownException.getMessage(), rethrownException);
@@ -213,9 +224,16 @@ public class LessonDaoImpl implements LessonDao {
         int timeslotId = lesson.getTimeslotId();
         String day = lesson.getDay().getDisplayName(TextStyle.FULL, Locale.UK); 
         try {
-            String message = "create " + lesson.toString();
-            LOG.debug(message);
-            return jdbcTemplate.update(SQL_INSERT_LESSON, lessonId, subjectId, teacherId, groupId, day, timeslotId) > 0;
+            boolean isLessonCreated = jdbcTemplate.update(SQL_INSERT_LESSON, lessonId, subjectId, teacherId, groupId, day, timeslotId) > 0;
+            String logMessage;
+            if(isLessonCreated) {
+                logMessage = "Created lesson: " + lesson;
+            } else {
+                logMessage = "Lesson not created: " + lesson;
+            }
+
+            LOG.debug(logMessage);
+            return isLessonCreated;
         } catch (DataAccessException e) {
             DatabaseException rethrownException = new DatabaseException(UNABLE_CREATE_LESSON, e);
             LOG.error(rethrownException.getMessage(), rethrownException);
