@@ -71,15 +71,21 @@ public class TeacherDaoImpl implements TeacherDao {
     public Teacher getById(int teacherId) {
         try {
             Teacher teacher = jdbcTemplate.queryForObject(SQL_GET_TEACHER_BY_ID, new Object[] {teacherId}, new TeacherMapper());
+            
             LOG.debug("Received subject: {}", teacher);
+            
             return teacher;
         } catch (EmptyResultDataAccessException e) {
             ObjectNotFoundException rethrownException = new ObjectNotFoundException(UNABLE_GET_TEACHER_BY_ID, e);
+            
             LOG.info(rethrownException.getMessage(), rethrownException);
+            
             throw rethrownException;
         } catch (DataAccessException e) {
             DatabaseException rethrownException = new DatabaseException(QUERY_EXECUTION_WENT_WRONG, e);
+            
             LOG.error(rethrownException.getMessage(), rethrownException);
+            
             throw rethrownException;
         }
     }
@@ -90,11 +96,15 @@ public class TeacherDaoImpl implements TeacherDao {
             return jdbcTemplate.query(SQL_GET_ALL, new TeacherMapper());
         } catch (EmptyResultDataAccessException e) {
             ObjectNotFoundException rethrownException = new ObjectNotFoundException(UNABLE_GET_ALL_TEACHERS, e);
+           
             LOG.info(rethrownException.getMessage(), rethrownException);
+            
             throw rethrownException;
         } catch (DataAccessException e) {
             DatabaseException rethrownException = new DatabaseException(QUERY_EXECUTION_WENT_WRONG, e);
+           
             LOG.error(rethrownException.getMessage(), rethrownException);
+            
             throw rethrownException;
         }
     }
@@ -103,6 +113,7 @@ public class TeacherDaoImpl implements TeacherDao {
     public boolean delete(Teacher teacher) {
         try {
             boolean isTeacherDeleted = jdbcTemplate.update(SQL_DELETE_TEACHER, teacher.getId()) > 0;
+          
             String logMessage;
             if(isTeacherDeleted) {
                 logMessage = "Deleted teacher: " + teacher;
@@ -110,10 +121,13 @@ public class TeacherDaoImpl implements TeacherDao {
                 logMessage = "Teacher not deleted: " + teacher;
             }
             LOG.debug(logMessage);
+           
             return isTeacherDeleted;
         } catch (DataAccessException e) {
             DatabaseException rethrownException = new DatabaseException(UNABLE_DELETE_TEACHER, e);
+         
             LOG.error(rethrownException.getMessage(), rethrownException);
+            
             throw rethrownException;
         }
     }
@@ -122,6 +136,7 @@ public class TeacherDaoImpl implements TeacherDao {
     public boolean update(Teacher teacher) {
         try {
             boolean isTeacherUpdated = jdbcTemplate.update(SQL_UPDATE_TEACHER, teacher.getFirstName(), teacher.getLastName(), teacher.getId()) > 0;
+         
             String logMessage;
             if(isTeacherUpdated) {
                 logMessage = "Updated teacher: " + teacher;
@@ -129,10 +144,13 @@ public class TeacherDaoImpl implements TeacherDao {
                 logMessage = "Teacher not updated: " + teacher;
             }
             LOG.debug(logMessage);
+         
             return isTeacherUpdated;
         } catch (DataAccessException e) {
             DatabaseException rethrownException = new DatabaseException(UNABLE_UPDATE_TEACHER, e);
+           
             LOG.error(rethrownException.getMessage(), rethrownException);
+            
             throw rethrownException;
         }
     }
@@ -141,6 +159,7 @@ public class TeacherDaoImpl implements TeacherDao {
     public boolean create(Teacher teacher) {
         try {
             boolean isTeacherCreated = jdbcTemplate.update(SQL_INSERT_TEACHER, teacher.getId(), teacher.getFirstName(), teacher.getLastName()) > 0;
+            
             String logMessage;
             if(isTeacherCreated) {
                 logMessage = "Created teacher: " + teacher;
@@ -148,10 +167,13 @@ public class TeacherDaoImpl implements TeacherDao {
                 logMessage = "Teacher not created: " + teacher;
             }
             LOG.debug(logMessage);
+           
             return isTeacherCreated;
         } catch (DataAccessException e) {
             DatabaseException rethrownException = new DatabaseException(UNABLE_CREATE_TEACHER, e);
+           
             LOG.error(rethrownException.getMessage(), rethrownException);
+            
             throw rethrownException;
         }
     }

@@ -51,7 +51,9 @@ public class TimetableService {
                 timeslot = Timeslot.getTimeslotById(timeslotId);
             } catch (IllegalArgumentException e) {
                 InvalidDataException rethrownException = new InvalidDataException(INVALID_TIMESLOT_ID, e);
+                
                 LOG.error(rethrownException.getMessage(), rethrownException);
+                
                 throw rethrownException;
             }
             Lesson lesson = lessonDaoImpl.getById(lessonId);
@@ -85,7 +87,9 @@ public class TimetableService {
                 timeslot = Timeslot.getTimeslotById(timeslotId);
             } catch (IllegalArgumentException e) {
                 InvalidDataException rethrownException = new InvalidDataException(INVALID_TIMESLOT_ID, e);
+              
                 LOG.error(rethrownException.getMessage(), rethrownException);
+                
                 throw rethrownException;
             }
             Lesson lesson = lessonDaoImpl.getById(lessonId);
@@ -119,32 +123,44 @@ public class TimetableService {
         
         if(lessonId == INVALID_ID_VALUE) {
             InvalidDataException rethrownException = new InvalidDataException(INVALID_LESSON_ID);
+
             LOG.error(rethrownException.getMessage(), rethrownException);
+            
             throw rethrownException;
         }
         if(subjectId == INVALID_ID_VALUE) {
             InvalidDataException rethrownException = new InvalidDataException(INVALID_SUBJECT_ID + lessonId);
+            
             LOG.error(rethrownException.getMessage(), rethrownException);
+            
             throw rethrownException;
         }
         if(teachertId == INVALID_ID_VALUE) {
             InvalidDataException rethrownException = new InvalidDataException(INVALID_TEACHER_ID + lessonId);
+            
             LOG.error(rethrownException.getMessage(), rethrownException);
+            
             throw rethrownException;
         }
         if(groupId == INVALID_ID_VALUE) {
             InvalidDataException rethrownException = new InvalidDataException(INVALID_GROUP_ID + lessonId);
+            
             LOG.error(rethrownException.getMessage(), rethrownException);
+            
             throw rethrownException;
         }
         if(day == null) {
             InvalidDataException rethrownException = new InvalidDataException(INVALID_DAY_ID + lessonId);
+            
             LOG.error(rethrownException.getMessage(), rethrownException);
+            
             throw rethrownException;
         }
         if(timeslotId < lowestTimeslotId || timeslotId > highestTimeslotId) {
             InvalidDataException rethrownException = new InvalidDataException(INVALID_TIMESLOT_ID);
+            
             LOG.error(rethrownException.getMessage(), rethrownException);
+            
             throw rethrownException;
         }
     }

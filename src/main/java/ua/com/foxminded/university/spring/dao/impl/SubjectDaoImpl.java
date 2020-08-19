@@ -68,15 +68,21 @@ public class SubjectDaoImpl implements SubjectDao {
     public Subject getById(int subjectId) {
         try {
             Subject subject = jdbcTemplate.queryForObject(SQL_GET_SUBJECT_BY_ID, new Object[] { subjectId }, new SubjectMapper());
+            
             LOG.debug("Received subject: {}", subject);
+            
             return subject;
         } catch (EmptyResultDataAccessException e) {
             ObjectNotFoundException rethrownException = new ObjectNotFoundException(UNABLE_GET_SUBJECT_BY_ID, e);
+            
             LOG.info(rethrownException.getMessage(), rethrownException);
+            
             throw rethrownException;
         } catch (DataAccessException e) {
             DatabaseException rethrownException = new DatabaseException(QUERY_EXECUTION_WENT_WRONG, e);
+            
             LOG.error(rethrownException.getMessage(), rethrownException);
+            
             throw rethrownException;
         }
     }
@@ -87,11 +93,15 @@ public class SubjectDaoImpl implements SubjectDao {
             return jdbcTemplate.query(SQL_GET_ALL, new SubjectMapper());
         } catch (EmptyResultDataAccessException e) {
             ObjectNotFoundException rethrownException = new ObjectNotFoundException(UNABLE_GET_ALL_SUBJECTS, e);
+           
             LOG.info(rethrownException.getMessage(), rethrownException);
+            
             throw rethrownException;
         } catch (DataAccessException e) {
             DatabaseException rethrownException = new DatabaseException(QUERY_EXECUTION_WENT_WRONG, e);
+            
             LOG.error(rethrownException.getMessage(), rethrownException);
+            
             throw rethrownException;
         }
     }
@@ -100,17 +110,21 @@ public class SubjectDaoImpl implements SubjectDao {
     public boolean delete(Subject subject) {
         try {
             boolean isSubjectDeleted = jdbcTemplate.update(SQL_DELETE_SUBJECT, subject.getId()) > 0;
+          
             String logMessage;
             if(isSubjectDeleted) {
                 logMessage = "Deleted subject: " + subject;
             } else {
                 logMessage = "Subject not deleted: " + subject;
-            }
+            }   
             LOG.debug(logMessage);
+            
             return isSubjectDeleted;
         } catch (DataAccessException e) {
             DatabaseException rethrownException = new DatabaseException(UNABLE_DELETE_SUBJECT, e);
+           
             LOG.error(rethrownException.getMessage(), rethrownException);
+            
             throw rethrownException;
         }
     }
@@ -119,6 +133,7 @@ public class SubjectDaoImpl implements SubjectDao {
     public boolean update(Subject subject) {
         try {
             boolean isSubjectUpdated = jdbcTemplate.update(SQL_UPDATE_SUBJECT, subject.getName(), subject.getId()) > 0;
+           
             String logMessage;
             if(isSubjectUpdated) {
                 logMessage = "Updated subject: " + subject;
@@ -126,10 +141,13 @@ public class SubjectDaoImpl implements SubjectDao {
                 logMessage = "Subject not updated: " + subject;
             }
             LOG.debug(logMessage);
+            
             return isSubjectUpdated;
         } catch (DataAccessException e) {
             DatabaseException rethrownException = new DatabaseException(UNABLE_UPDATE_SUBJECT, e);
+           
             LOG.error(rethrownException.getMessage(), rethrownException);
+            
             throw rethrownException;
         }
     }
@@ -138,6 +156,7 @@ public class SubjectDaoImpl implements SubjectDao {
     public boolean create(Subject subject) {
         try {
             boolean isSubjectCreated = jdbcTemplate.update(SQL_INSERT_SUBJECT, subject.getId(), subject.getName()) > 0;
+           
             String logMessage;
             if(isSubjectCreated) {
                 logMessage = "Created subject: " + subject;
@@ -145,10 +164,13 @@ public class SubjectDaoImpl implements SubjectDao {
                 logMessage = "Subject not created: " + subject;
             }
             LOG.debug(logMessage);
+           
             return isSubjectCreated;
         } catch (DataAccessException e) {
             DatabaseException rethrownException = new DatabaseException(UNABLE_CREATE_SUBJECT, e);
+           
             LOG.error(rethrownException.getMessage(), rethrownException);
+            
             throw rethrownException;
         }
     }
