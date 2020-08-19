@@ -2,6 +2,8 @@ package ua.com.foxminded.university.spring.dao.impl;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -17,6 +19,8 @@ import ua.com.foxminded.university.spring.dao.mappers.SubjectMapper;
 @Component
 public class SubjectDaoImpl implements SubjectDao {
 
+    private static final Logger LOG = LoggerFactory.getLogger(SubjectDaoImpl.class);
+    
     private static final String SQL_GET_SUBJECT_BY_ID = "" + 
             "select\n" + 
             "  *\n" + 
@@ -51,6 +55,7 @@ public class SubjectDaoImpl implements SubjectDao {
     private static final String UNABLE_DELETE_SUBJECT = "Unable to delete subject from the database.";
     private static final String UNABLE_UPDATE_SUBJECT = "Unable to update subject in the database.";
     private static final String UNABLE_CREATE_SUBJECT = "Unable to insert subject in the database.";
+    private static final String QUERY_EXECUTION_WENT_WRONG= "Something went wrong during SQL Query execution.";
 
     private JdbcTemplate jdbcTemplate;
     
@@ -62,11 +67,17 @@ public class SubjectDaoImpl implements SubjectDao {
     @Override
     public Subject getById(int subjectId) {
         try {
-            return jdbcTemplate.queryForObject(SQL_GET_SUBJECT_BY_ID, new Object[] { subjectId }, new SubjectMapper());
+            Subject subject = jdbcTemplate.queryForObject(SQL_GET_SUBJECT_BY_ID, new Object[] { subjectId }, new SubjectMapper());
+            LOG.debug("Received subject: {}", subject);
+            return subject;
         } catch (EmptyResultDataAccessException e) {
-            throw new ObjectNotFoundException(UNABLE_GET_SUBJECT_BY_ID, e);
+            ObjectNotFoundException rethrownException = new ObjectNotFoundException(UNABLE_GET_SUBJECT_BY_ID, e);
+            LOG.info(rethrownException.getMessage(), rethrownException);
+            throw rethrownException;
         } catch (DataAccessException e) {
-            throw new DatabaseException(e);
+            DatabaseException rethrownException = new DatabaseException(QUERY_EXECUTION_WENT_WRONG, e);
+            LOG.error(rethrownException.getMessage(), rethrownException);
+            throw rethrownException;
         }
     }
 
@@ -75,36 +86,70 @@ public class SubjectDaoImpl implements SubjectDao {
         try {
             return jdbcTemplate.query(SQL_GET_ALL, new SubjectMapper());
         } catch (EmptyResultDataAccessException e) {
-            throw new ObjectNotFoundException(UNABLE_GET_ALL_SUBJECTS, e);
+            ObjectNotFoundException rethrownException = new ObjectNotFoundException(UNABLE_GET_ALL_SUBJECTS, e);
+            LOG.info(rethrownException.getMessage(), rethrownException);
+            throw rethrownException;
         } catch (DataAccessException e) {
-            throw new DatabaseException(e);
+            DatabaseException rethrownException = new DatabaseException(QUERY_EXECUTION_WENT_WRONG, e);
+            LOG.error(rethrownException.getMessage(), rethrownException);
+            throw rethrownException;
         }
     }
 
     @Override
     public boolean delete(Subject subject) {
         try {
-            return jdbcTemplate.update(SQL_DELETE_SUBJECT, subject.getId()) > 0;
+            boolean isSubjectDeleted = jdbcTemplate.update(SQL_DELETE_SUBJECT, subject.getId()) > 0;
+            String logMessage;
+            if(isSubjectDeleted) {
+                logMessage = "Deleted subject: " + subject;
+            } else {
+                logMessage = "Subject not deleted: " + subject;
+            }
+            LOG.debug(logMessage);
+            return isSubjectDeleted;
         } catch (DataAccessException e) {
-            throw new DatabaseException(UNABLE_DELETE_SUBJECT, e);
+            DatabaseException rethrownException = new DatabaseException(UNABLE_DELETE_SUBJECT, e);
+            LOG.error(rethrownException.getMessage(), rethrownException);
+            throw rethrownException;
         }
     }
 
     @Override
     public boolean update(Subject subject) {
         try {
-            return jdbcTemplate.update(SQL_UPDATE_SUBJECT, subject.getName(), subject.getId()) > 0;
+            boolean isSubjectUpdated = jdbcTemplate.update(SQL_UPDATE_SUBJECT, subject.getName(), subject.getId()) > 0;
+            String logMessage;
+            if(isSubjectUpdated) {
+                logMessage = "Updated subject: " + subject;
+            } else {
+                logMessage = "Subject not updated: " + subject;
+            }
+            LOG.debug(logMessage);
+            return isSubjectUpdated;
         } catch (DataAccessException e) {
-            throw new DatabaseException(UNABLE_UPDATE_SUBJECT, e);
+            DatabaseException rethrownException = new DatabaseException(UNABLE_UPDATE_SUBJECT, e);
+            LOG.error(rethrownException.getMessage(), rethrownException);
+            throw rethrownException;
         }
     }
 
     @Override
     public boolean create(Subject subject) {
         try {
-            return jdbcTemplate.update(SQL_INSERT_SUBJECT, subject.getId(), subject.getName()) > 0;
+            boolean isSubjectCreated = jdbcTemplate.update(SQL_INSERT_SUBJECT, subject.getId(), subject.getName()) > 0;
+            String logMessage;
+            if(isSubjectCreated) {
+                logMessage = "Created subject: " + subject;
+            } else {
+                logMessage = "Subject not created: " + subject;
+            }
+            LOG.debug(logMessage);
+            return isSubjectCreated;
         } catch (DataAccessException e) {
-            throw new DatabaseException(UNABLE_CREATE_SUBJECT, e);
+            DatabaseException rethrownException = new DatabaseException(UNABLE_CREATE_SUBJECT, e);
+            LOG.error(rethrownException.getMessage(), rethrownException);
+            throw rethrownException;
         }
     }
 
