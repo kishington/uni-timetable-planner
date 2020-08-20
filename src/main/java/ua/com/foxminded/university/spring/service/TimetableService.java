@@ -65,9 +65,11 @@ public class TimetableService {
 
     public Timetable getWeekTimetableForTeacher(int teacherId) {
         Map<DayOfWeek, Map<Timeslot, Lesson>> timetableValue = new HashMap<>();
-        for (DayOfWeek day : DayOfWeek.values()) {
+        for (DayOfWeek day : DayOfWeek.values()) {    
             Map<Timeslot, Lesson> dayTimetable = getDayTimetableForTeacher(teacherId, day);
             timetableValue.put(day, dayTimetable);
+            
+            LOG.debug("Forming teacher's (teacherId = {}) week timetable. Formed day timetable for {}", teacherId, day);
         }
         Timetable timetable = new Timetable();
         timetable.setValue(timetableValue);
@@ -104,6 +106,8 @@ public class TimetableService {
         for (DayOfWeek day : DayOfWeek.values()) {
             Map<Timeslot, Lesson> dayTimetable = getDayTimetableForGroup(groupId, day);
             timetableValue.put(day, dayTimetable);
+            
+            LOG.debug("Forming teacher's (teacherId = {}) week timetable. Formed day timetable for {}", groupId, day);
         }
         Timetable timetable = new Timetable();
         timetable.setValue(timetableValue);
@@ -111,6 +115,9 @@ public class TimetableService {
     } 
     
     private void validate(Lesson lesson) {  
+        
+        LOG.debug("Validating lesson: {}", lesson);
+        
         int lessonId = lesson.getId();
         int subjectId = lesson.getSubjectId();
         int teachertId = lesson.getTeacherId();
