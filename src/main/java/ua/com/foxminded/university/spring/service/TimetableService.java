@@ -40,6 +40,10 @@ public class TimetableService {
     
     public Map<Timeslot, Lesson> getDayTimetableForTeacher(int teacherId, DayOfWeek day) {
         List<TimeslotIdLessonIdPair> notFormattedDayTimetable = lessonDaoImpl.getTeachersTimeslotIdAndLessonIdPairs(teacherId, day);
+        
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Forming day timetable for teacher: teacherId = {}, day = {}", teacherId, day);
+        }
 
         Map<Timeslot, Lesson> dayTimetable = new HashMap<>();
         for(int i = 0; i < notFormattedDayTimetable.size(); i++) {
@@ -60,23 +64,41 @@ public class TimetableService {
             validate(lesson);
             dayTimetable.put(timeslot, lesson);
         }  
+        
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Teacher's day timetable formed successfully: teacherId = {}, day = {}", teacherId, day);
+        }
+        
         return dayTimetable;
     } 
 
     public Timetable getWeekTimetableForTeacher(int teacherId) {
+        
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Forming week timetable for teacher: teacherId = {}", teacherId);
+        }
+        
         Map<DayOfWeek, Map<Timeslot, Lesson>> timetableValue = new HashMap<>();
         for (DayOfWeek day : DayOfWeek.values()) {    
             Map<Timeslot, Lesson> dayTimetable = getDayTimetableForTeacher(teacherId, day);
-            timetableValue.put(day, dayTimetable);
-            
-            LOG.debug("Forming teacher's (teacherId = {}) week timetable. Formed day timetable for {}", teacherId, day);
+            timetableValue.put(day, dayTimetable);      
         }
         Timetable timetable = new Timetable();
         timetable.setValue(timetableValue);
+        
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Teacher's week timetable formed successfully: teacherId = {}", teacherId);
+        }
+        
         return timetable;
     }
 
     public Map<Timeslot, Lesson> getDayTimetableForGroup(int groupId, DayOfWeek day) {
+        
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Forming day timetable for group: groupId = {}, day = {}", groupId, day);
+        }
+        
         List<TimeslotIdLessonIdPair> notFormattedDayTimetable = lessonDaoImpl.getGroupsTimeslotIdAndLessonIdPairs(groupId, day);
         Map<Timeslot, Lesson> dayTimetable = new HashMap<>();
         for(int i = 0; i < notFormattedDayTimetable.size(); i++) {
@@ -98,25 +120,40 @@ public class TimetableService {
             validate(lesson);
             dayTimetable.put(timeslot, lesson);
         }  
+        
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Group's day timetable formed successfully: groupId = {}, day = {}", groupId, day);
+        }
+        
         return dayTimetable;
     }
     
     public Timetable getWeekTimetableForGroup(int groupId) {
+        
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Forming week timetable for group: groupId = {}", groupId);
+        }
+        
         Map<DayOfWeek, Map<Timeslot, Lesson>> timetableValue = new HashMap<>();
         for (DayOfWeek day : DayOfWeek.values()) {
             Map<Timeslot, Lesson> dayTimetable = getDayTimetableForGroup(groupId, day);
             timetableValue.put(day, dayTimetable);
-            
-            LOG.debug("Forming teacher's (teacherId = {}) week timetable. Formed day timetable for {}", groupId, day);
         }
         Timetable timetable = new Timetable();
         timetable.setValue(timetableValue);
+        
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Group's week timetable formed successfully: groupId = {}", groupId);
+        }
+        
         return timetable;
     } 
     
     private void validate(Lesson lesson) {  
         
-        LOG.debug("Validating lesson: {}", lesson);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Validating lesson: {}", lesson);
+        }
         
         int lessonId = lesson.getId();
         int subjectId = lesson.getSubjectId();
@@ -170,5 +207,10 @@ public class TimetableService {
             
             throw rethrownException;
         }
+        
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Validation successful");
+        }
+        
     }
 }
