@@ -69,10 +69,8 @@ public class TeacherDaoImpl implements TeacherDao {
 
     @Override
     public Teacher getById(int teacherId) {
-        
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Receiving teacher: teachertId = {}", teacherId);
-        }
+
+        LOG.debug("Receiving teacher: teachertId = {}", teacherId);
         
         try {
             Teacher teacher = jdbcTemplate.queryForObject(SQL_GET_TEACHER_BY_ID, new Object[] {teacherId}, new TeacherMapper());
@@ -102,9 +100,7 @@ public class TeacherDaoImpl implements TeacherDao {
     @Override
     public List<Teacher> getAll() {
         
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Receiving all teachers.");
-        }
+        LOG.debug("Receiving all teachers.");
         
         try {
             return jdbcTemplate.query(SQL_GET_ALL, new TeacherMapper());
@@ -128,9 +124,7 @@ public class TeacherDaoImpl implements TeacherDao {
     @Override
     public boolean delete(Teacher teacher) {
         
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Deleting teacher: teachertId = {}", teacher.getId());
-        }
+        LOG.debug("Deleting teacher: teachertId = {}", teacher.getId());
         
         try {
             boolean isTeacherDeleted = jdbcTemplate.update(SQL_DELETE_TEACHER, teacher.getId()) > 0;
@@ -157,10 +151,8 @@ public class TeacherDaoImpl implements TeacherDao {
 
     @Override
     public boolean update(Teacher teacher) {
-        
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Updating teacher: teachertId = {}", teacher.getId());
-        }
+
+        LOG.debug("Updating teacher: teachertId = {}", teacher.getId());
         
         try {
             boolean isTeacherUpdated = jdbcTemplate.update(SQL_UPDATE_TEACHER, teacher.getFirstName(), teacher.getLastName(), teacher.getId()) > 0;
@@ -188,9 +180,7 @@ public class TeacherDaoImpl implements TeacherDao {
     @Override
     public boolean create(Teacher teacher) {
         
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Creating teacher: teachertId = {}", teacher.getId());
-        }
+        LOG.debug("Creating teacher: teachertId = {}", teacher.getId());
         
         try {
             boolean isTeacherCreated = jdbcTemplate.update(SQL_INSERT_TEACHER, teacher.getId(), teacher.getFirstName(), teacher.getLastName()) > 0;

@@ -141,11 +141,9 @@ public class LessonDaoImpl implements LessonDao {
     
     @Override
     public Lesson getById(int lessonId) {
-        
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Receiving lesson: lessonId = {}", lessonId);
-        }
-        
+
+        LOG.debug("Receiving lesson: lessonId = {}", lessonId);
+
         try {
             Lesson lesson = jdbcTemplate.queryForObject(SQL_GET_LESSON_BY_ID, new Object[] { lessonId }, new LessonMapper());
             
@@ -174,9 +172,8 @@ public class LessonDaoImpl implements LessonDao {
     @Override
     public List<Lesson> getAll() {
         
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Receiving all lessons");
-        }
+        LOG.debug("Receiving all lessons");
+
         
         try {
             return jdbcTemplate.query(SQL_GET_ALL, new LessonMapper());
@@ -200,9 +197,7 @@ public class LessonDaoImpl implements LessonDao {
     @Override
     public boolean delete(Lesson lesson) {
         
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Deleting lesson: lessonId = {}", lesson.getId());
-        }
+        LOG.debug("Deleting lesson: lessonId = {}", lesson.getId());
         
         try {
             boolean isLessonDeleted = jdbcTemplate.update(SQL_DELETE_LESSON, lesson.getId()) > 0;
@@ -229,10 +224,8 @@ public class LessonDaoImpl implements LessonDao {
 
     @Override
     public boolean update(Lesson lesson) {
-        
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Updating lesson: lessonId = {}", lesson.getId());
-        }
+
+        LOG.debug("Updating lesson: lessonId = {}", lesson.getId());
         
         int lessonId = lesson.getId();
         int subjectId = lesson.getSubjectId();
@@ -265,10 +258,8 @@ public class LessonDaoImpl implements LessonDao {
     
     @Override
     public boolean create(Lesson lesson) {
-        
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Creating lesson: lessonId = ", lesson.getId());
-        }
+
+        LOG.debug("Creating lesson: lessonId = {}", lesson.getId());
         
         int lessonId = lesson.getId();
         int subjectId = lesson.getSubjectId();
@@ -301,9 +292,7 @@ public class LessonDaoImpl implements LessonDao {
     
     public int getNumberOfLessonsPerWeekForTeacher(int teacherId) {     
         
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Receiving number of lessons per week for teacher: teacherId = {}", teacherId);
-        }
+        LOG.debug("Receiving number of lessons per week for teacher: teacherId = {}", teacherId);
         
         try {
             return jdbcTemplate.queryForObject(SQL_GET_NO_OF_LESSONS_PER_WEEK_FOR_TEACHER, new Object[] { teacherId }, Integer.class);
@@ -318,9 +307,7 @@ public class LessonDaoImpl implements LessonDao {
 
     public int getNumberOfLessonsPerWeekForGroup(int groupId) {     
         
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Receiving number of lessons per week for group: groupId = {}", groupId);
-        }
+        LOG.debug("Receiving number of lessons per week for group: groupId = {}", groupId);
         
         try {
             return jdbcTemplate.queryForObject(SQL_GET_NO_OF_LESSONS_PER_WEEK_FOR_GROUP, new Object[] { groupId }, Integer.class);
@@ -360,10 +347,8 @@ public class LessonDaoImpl implements LessonDao {
     } 
     
     public List<Lesson> getAllTeacherLessonsForWeek(int teacherId) {
-        
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Receiving all lessons for week for teacher: groupId = {}", teacherId);
-        }
+
+        LOG.debug("Receiving all lessons for week for teacher: groupId = {}", teacherId);
         
         try {
             return jdbcTemplate.query(SQL_GET_LESSONS_FOR_TEACHER_FOR_WEEK, new Object[] { teacherId }, new LessonMapper());

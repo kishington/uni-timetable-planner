@@ -67,9 +67,7 @@ public class SubjectDaoImpl implements SubjectDao {
     @Override
     public Subject getById(int subjectId) {
         
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Receiving subject: subjectId = {}", subjectId);
-        }
+        LOG.debug("Receiving subject: subjectId = {}", subjectId);
         
         try {
             Subject subject = jdbcTemplate.queryForObject(SQL_GET_SUBJECT_BY_ID, new Object[] { subjectId }, new SubjectMapper());
@@ -99,9 +97,7 @@ public class SubjectDaoImpl implements SubjectDao {
     @Override
     public List<Subject> getAll() {
         
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Receiving all subjects");
-        }
+        LOG.debug("Receiving all subjects");
         
         try {
             return jdbcTemplate.query(SQL_GET_ALL, new SubjectMapper());
@@ -125,9 +121,7 @@ public class SubjectDaoImpl implements SubjectDao {
     @Override
     public boolean delete(Subject subject) {
         
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Deleting subject: subjectId = {}", subject.getId());
-        }
+        LOG.debug("Deleting subject: subjectId = {}", subject.getId());
         
         try {
             boolean isSubjectDeleted = jdbcTemplate.update(SQL_DELETE_SUBJECT, subject.getId()) > 0;
@@ -155,9 +149,7 @@ public class SubjectDaoImpl implements SubjectDao {
     @Override
     public boolean update(Subject subject) {
         
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Updating subject: subjectId = {}", subject.getId());
-        }
+        LOG.debug("Updating subject: subjectId = {}", subject.getId());
         
         try {
             boolean isSubjectUpdated = jdbcTemplate.update(SQL_UPDATE_SUBJECT, subject.getName(), subject.getId()) > 0;
@@ -185,9 +177,7 @@ public class SubjectDaoImpl implements SubjectDao {
     @Override
     public boolean create(Subject subject) {
         
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Creating subject: subjectId = {}", subject.getId());
-        }
+        LOG.debug("Creating subject: subjectId = {}", subject.getId());
         
         try {
             boolean isSubjectCreated = jdbcTemplate.update(SQL_INSERT_SUBJECT, subject.getId(), subject.getName()) > 0;
