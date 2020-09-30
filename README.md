@@ -7,7 +7,7 @@ Of course, as the project is being developed there could be some changes to the 
 2. Second step was to implement in Java code all the classes described in the UML class diagram mentioned in the first step.
 3. Third step was adding DAO layer based on Spring JDBC.
 4. Fourth step was to add service layer and implementation of business logic using Spring IoC. Some functionality has been added already but as the project develops, there is an
-increasing need to add new functionality. That means that in the future we might go back to this step again and again.
+increasing need to add new functionality. That means that in the future we might go back to this step again.
 5. Fifth step is to add custom logging and Exception handling. I haven't finished with this step yet. There is some minor polishing to be done.
 6. Sixth step is to add User Interface based on Spring MVC, Thymeleaf and Bootstrap. I have just stated working on it while polishing some bits of the logging.
 7. There is lots of work to be done in the future. There are so many technologies and frameworkds to be added. Specifically, such technologies as Hibernate, Spring Boot,
